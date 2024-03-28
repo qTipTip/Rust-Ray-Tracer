@@ -1,4 +1,4 @@
-use std::ops::{Add, Neg, Sub};
+use std::ops::{Add, Div, Mul, Neg, Sub};
 
 #[derive(PartialEq, Debug, Copy, Clone)]
 struct Tuple {
@@ -51,7 +51,7 @@ impl Sub for Tuple {
     type Output = Self;
 
     fn sub(self, rhs: Self) -> Self::Output {
-        Self{
+        Self {
             x: self.x - rhs.x,
             y: self.y - rhs.y,
             z: self.z - rhs.z,
@@ -68,9 +68,36 @@ impl Neg for Tuple {
     }
 }
 
+impl Mul<f64> for Tuple {
+    type Output = Self;
+
+    fn mul(self, rhs: f64) -> Self::Output {
+        Self {
+            x: self.x * rhs,
+            y: self.y * rhs,
+            z: self.z * rhs,
+            w: self.w,
+        }
+    }
+}
+
+impl Div<f64> for Tuple {
+    type Output = Self;
+
+    fn div(self, rhs: f64) -> Self::Output {
+        Self {
+            x: self.x / rhs,
+            y: self.y / rhs,
+            z: self.z / rhs,
+            w: 0,
+        }
+    }
+}
+
 
 #[cfg(test)]
 mod tests {
+    use std::ops::Div;
     use crate::tuple::Tuple;
 
     #[test]
@@ -115,7 +142,7 @@ mod tests {
         let b = Tuple::new(4.3, -4.2, 3.1, 0);
         let c = Tuple::new(4.3, -4.20000000000001, 3.1, 0);
 
-        assert!(a != b);
+        assert_ne!(a, b);
         assert!(c != a && c != b && c == c);
     }
 
@@ -161,5 +188,23 @@ mod tests {
 
         assert_eq!(-a, b);
         assert!((-a).is_vector());
+    }
+
+    #[test]
+    fn test_scalar_multiplication() {
+        let a = Tuple::vector(3.0, 2.0, 1.0);
+        let x = 2.0;
+        let c = Tuple::vector(6.0, 4.0, 2.0);
+
+        assert_eq!(a * x, c);
+    }
+
+    #[test]
+    fn test_scalar_division() {
+        let a = Tuple::vector(3.0, 2.0, 1.0);
+        let x = 2.0;
+        let c = Tuple::vector(1.5, 1.0, 0.5);
+
+        assert_eq!(a / x, c);
     }
 }
