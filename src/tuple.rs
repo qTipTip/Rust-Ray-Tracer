@@ -8,6 +8,8 @@ struct Tuple {
     w: u8,
 }
 
+
+
 impl Tuple {
     fn new(x: f64, y: f64, z: f64, w: u8) -> Tuple {
         Tuple { x, y, z, w }
@@ -35,6 +37,10 @@ impl Tuple {
 
     fn abs(&self) -> f64 {
         (self.x * self.x + self.y * self.y + self.z * self.z + self.w as f64 * self.w as f64).sqrt()
+    }
+
+    fn norm(&self) -> Self {
+        *self / self.abs()
     }
 }
 
@@ -217,5 +223,17 @@ mod tests {
         assert_eq!(Tuple::vector(0.0, 0.0, 1.0).abs(), 1.0);
         assert_eq!(Tuple::vector(1.0, 2.0, 3.0).abs(), f64::sqrt(14.0));
         assert_eq!(Tuple::vector(-1.0, -2.0, -3.0).abs(), f64::sqrt(14.0));
+    }
+
+    #[test]
+    fn test_normalize() {
+        let a = Tuple::vector(4.0, 0.0, 0.0);
+        let b = Tuple::vector(1.0, 0.0, 0.0);
+
+        assert_eq!(a.norm(), b);
+
+        let c = Tuple::vector(1.0, 2.0, 3.0);
+        assert_eq!(c.norm(), c / f64::sqrt(14.0));
+        assert_eq!(c.norm().abs(), 1.0);
     }
 }
