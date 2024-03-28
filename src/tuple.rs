@@ -11,7 +11,7 @@ struct Tuple {
 
 
 impl Tuple {
-    fn new(x: f64, y: f64, z: f64, w: u8) -> Tuple {
+    fn new(x: f64, y: f64, z: f64, w: u8) -> Self {
         Tuple { x, y, z, w }
     }
 
@@ -23,16 +23,16 @@ impl Tuple {
         self.w == 0
     }
 
-    fn point(x: f64, y: f64, z: f64) -> Tuple {
+    fn point(x: f64, y: f64, z: f64) -> Self {
         Tuple { x, y, z, w: 1 }
     }
 
-    fn vector(x: f64, y: f64, z: f64) -> Tuple {
+    fn vector(x: f64, y: f64, z: f64) -> Self {
         Tuple { x, y, z, w: 0 }
     }
 
-    fn origin() -> Tuple {
-        Tuple::vector(0.0, 0.0, 0.0)
+    fn origin() -> Self {
+        Self::vector(0.0, 0.0, 0.0)
     }
 
     fn abs(&self) -> f64 {
@@ -45,6 +45,10 @@ impl Tuple {
 
     fn dot(&self, rhs: Self) -> f64 {
         self.x * rhs.x + self.y * rhs.y + self.z * rhs.z + (self.w * rhs.w) as f64
+    }
+
+    fn cross(&self, rhs: Self) -> Self {
+        Self::vector(self.y * rhs.z - self.z * rhs.y, self.z * rhs.x - self.x * rhs.z, self.x * rhs.y - self.y * rhs.x)
     }
 }
 
@@ -247,5 +251,14 @@ mod tests {
         let b = Tuple::vector(2.0, 3.0, 4.0);
 
         assert_eq!(a.dot(b), 20.0);
+    }
+
+    #[test]
+    fn test_cross_product() {
+        let a = Tuple::vector(1.0, 2.0, 3.0);
+        let b = Tuple::vector(2.0, 3.0, 4.0);
+        let c = Tuple::vector(-1.0, 2.0, -1.0);
+        assert_eq!(a.cross(b), c);
+        assert_eq!(b.cross(a), -c);
     }
 }
