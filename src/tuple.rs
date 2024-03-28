@@ -36,11 +36,15 @@ impl Tuple {
     }
 
     fn abs(&self) -> f64 {
-        (self.x * self.x + self.y * self.y + self.z * self.z + self.w as f64 * self.w as f64).sqrt()
+        (self.x * self.x + self.y * self.y + self.z * self.z + (self.w * self.w) as f64).sqrt()
     }
 
     fn norm(&self) -> Self {
         *self / self.abs()
+    }
+
+    fn dot(&self, rhs: Self) -> f64 {
+        self.x * rhs.x + self.y * rhs.y + self.z * rhs.z + (self.w * rhs.w) as f64
     }
 }
 
@@ -235,5 +239,13 @@ mod tests {
         let c = Tuple::vector(1.0, 2.0, 3.0);
         assert_eq!(c.norm(), c / f64::sqrt(14.0));
         assert_eq!(c.norm().abs(), 1.0);
+    }
+
+    #[test]
+    fn test_dot_product() {
+        let a = Tuple::vector(1.0, 2.0, 3.0);
+        let b = Tuple::vector(2.0, 3.0, 4.0);
+
+        assert_eq!(a.dot(b), 20.0);
     }
 }
