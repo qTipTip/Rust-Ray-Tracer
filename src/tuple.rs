@@ -132,4 +132,13 @@ mod tests {
 
         assert_eq!(a - b, c);
     }
+
+    #[test]
+    fn test_subtract_vector_from_vector_gives_vector() {
+        let a = Tuple::vector(3.0, 2.0, 1.0);
+        let b = Tuple::vector(5.0, 6.0, 7.0);
+        let c = Tuple::vector(-2.0, -4.0, -6.0);
+
+        assert_eq!(a - b, c);
+    }
 }
