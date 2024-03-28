@@ -32,6 +32,10 @@ impl Tuple {
     fn origin() -> Tuple {
         Tuple::vector(0.0, 0.0, 0.0)
     }
+
+    fn abs(&self) -> f64 {
+        (self.x * self.x + self.y * self.y + self.z * self.z + self.w as f64 * self.w as f64).sqrt()
+    }
 }
 
 impl Add for Tuple {
@@ -94,10 +98,8 @@ impl Div<f64> for Tuple {
     }
 }
 
-
 #[cfg(test)]
 mod tests {
-    use std::ops::Div;
     use crate::tuple::Tuple;
 
     #[test]
@@ -206,5 +208,14 @@ mod tests {
         let c = Tuple::vector(1.5, 1.0, 0.5);
 
         assert_eq!(a / x, c);
+    }
+
+    #[test]
+    fn test_abs() {
+        assert_eq!(Tuple::vector(1.0, 0.0, 0.0).abs(), 1.0);
+        assert_eq!(Tuple::vector(0.0, 1.0, 0.0).abs(), 1.0);
+        assert_eq!(Tuple::vector(0.0, 0.0, 1.0).abs(), 1.0);
+        assert_eq!(Tuple::vector(1.0, 2.0, 3.0).abs(), f64::sqrt(14.0));
+        assert_eq!(Tuple::vector(-1.0, -2.0, -3.0).abs(), f64::sqrt(14.0));
     }
 }
