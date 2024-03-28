@@ -1,6 +1,6 @@
-use std::ops::{Add, Sub};
+use std::ops::{Add, Neg, Sub};
 
-#[derive(PartialEq, Debug)]
+#[derive(PartialEq, Debug, Copy, Clone)]
 struct Tuple {
     x: f64,
     y: f64,
@@ -28,6 +28,10 @@ impl Tuple {
     fn vector(x: f64, y: f64, z: f64) -> Tuple {
         Tuple { x, y, z, w: 0 }
     }
+
+    fn origin() -> Tuple {
+        Tuple::vector(0.0, 0.0, 0.0)
+    }
 }
 
 impl Add for Tuple {
@@ -53,6 +57,14 @@ impl Sub for Tuple {
             z: self.z - rhs.z,
             w: self.w - rhs.w,
         }
+    }
+}
+
+impl Neg for Tuple {
+    type Output = Self;
+
+    fn neg(self) -> Self::Output {
+        Self::origin() - self
     }
 }
 
@@ -140,5 +152,14 @@ mod tests {
         let c = Tuple::vector(-2.0, -4.0, -6.0);
 
         assert_eq!(a - b, c);
+    }
+
+    #[test]
+    fn test_negation() {
+        let a = Tuple::vector(3.0, 2.0, 1.0);
+        let b = Tuple::vector(-3.0, -2.0, -1.0);
+
+        assert_eq!(-a, b);
+        assert!((-a).is_vector());
     }
 }
