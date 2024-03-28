@@ -1,3 +1,4 @@
+#[derive(PartialEq)]
 struct Tuple {
     x: f64,
     y: f64,
@@ -66,5 +67,15 @@ mod tests {
         let a = Tuple::vector(4.3, -4.2, 3.1);
         assert!(!a.is_point());
         assert!(a.is_vector());
+    }
+
+    #[test]
+    fn test_equality() {
+        let a = Tuple::new(4.3, -4.2, 3.1, 1);
+        let b = Tuple::new(4.3, -4.2, 3.1, 0);
+        let c = Tuple::new(4.3, -4.20000000000001, 3.1, 0);
+
+        assert!(a != b);
+        assert!(c != a && c != b && c == c);
     }
 }
