@@ -1,4 +1,6 @@
-#[derive(PartialEq)]
+use std::ops::Add;
+
+#[derive(PartialEq, Debug)]
 struct Tuple {
     x: f64,
     y: f64,
@@ -25,6 +27,19 @@ impl Tuple {
 
     fn vector(x: f64, y: f64, z: f64) -> Tuple {
         Tuple { x, y, z, w: 0 }
+    }
+}
+
+impl Add for Tuple {
+    type Output = Self;
+
+    fn add(self, rhs: Self) -> Self::Output {
+        Self {
+            x: self.x + rhs.x,
+            y: self.y + rhs.y,
+            z: self.z + rhs.z,
+            w: self.w + rhs.w,
+        }
     }
 }
 
@@ -77,5 +92,13 @@ mod tests {
 
         assert!(a != b);
         assert!(c != a && c != b && c == c);
+    }
+
+    #[test]
+    fn test_add_tuples() {
+        let a = Tuple::new(4.3, -4.2, 3.1, 1);
+        let b = Tuple::new(1.0, 0.0, 1.0, 0);
+        let c = Tuple::new(5.3, -4.2, 4.1, 1);
+        assert_eq!(a + b, c);
     }
 }
