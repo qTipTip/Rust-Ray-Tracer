@@ -64,6 +64,34 @@ impl Matrix {
             return 0.0;
         }
     }
+
+    fn remove_row(&self, row: usize) -> Self {
+        let mut values = vec![0.0; (self.rows - 1) * self.columns];
+        let mut running_idx = 0;
+        for i in 0..self.rows {
+            if i == row {
+                continue;
+            }
+            for j in 0..self.columns {
+                let idx = i * self.columns + j;
+                values[running_idx] = self.values[idx];
+                running_idx += 1;
+            }
+        }
+        Self {
+            values,
+            rows: self.rows - 1,
+            columns: self.columns,
+        }
+    }
+
+    fn remove_column(&self, column: usize) -> Self {
+        self.transpose().remove_row(column).transpose()
+    }
+
+    fn submatrix(&self, row: usize, column: usize) -> Self {
+        self.remove_row(row).remove_column(column)
+    }
 }
 
 impl PartialEq for Matrix {
@@ -256,5 +284,66 @@ mod tests {
     fn test_2x2_determinant() {
         let m = Matrix::new(vec![1.0, 2.0, 3.0, 4.0], 2, 2);
         assert_eq!(m.det(), -2.0);
+    }
+
+    #[test]
+    fn test_remove_row() {
+        let m = Matrix::new(vec![
+            1.0, 2.0, 3.0,
+            4.0, 5.0, 6.0,
+        ], 2, 3);
+
+        let n = Matrix::new(vec![
+            4.0, 5.0, 6.0,
+        ], 1, 3);
+
+        assert_eq!(m.remove_row(0), n);
+    }
+
+    #[test]
+    fn test_remove_column() {
+        let m = Matrix::new(vec![
+            1.0, 2.0, 3.0,
+            4.0, 5.0, 6.0,
+        ], 2, 3);
+
+        let n = Matrix::new(vec![
+            2.0, 3.0,
+            5.0, 6.0,
+        ], 2, 2);
+
+        assert_eq!(m.remove_column(0), n);
+    }
+
+    #[test]
+    fn test_2x2_submatrix() {
+        let m = Matrix::new(vec![
+            1.0, 5.0, 0.0,
+            -3.0, 2.0, 7.0,
+            0.0, 6.0, -3.0,
+        ], 3, 3);
+        let s = Matrix::new(vec![
+            -3.0, 2.0,
+            0.0, 6.0,
+        ], 2, 2);
+
+        assert_eq!(m.submatrix(0, 2), s);
+    }
+
+    #[test]
+    fn test_3x3_submatrix() {
+        let m = Matrix::new(vec![
+            -6.0, 1.0, 1.0, 6.0,
+            -8.0, 5.0, 8.0, 6.0,
+            -1.0, 0.0, 8.0, 2.0,
+            -7.0, 1.0, -1.0, 1.0,
+        ], 4, 4);
+        let s = Matrix::new(vec![
+            5.0, 8.0, 6.0,
+            0.0, 8.0, 2.0,
+            1.0, -1.0, 1.0,
+        ], 3, 3);
+
+        assert_eq!(m.submatrix(0, 0), s);
     }
 }
