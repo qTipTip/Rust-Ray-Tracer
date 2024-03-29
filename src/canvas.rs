@@ -1,5 +1,5 @@
-use std::io::Write;
-use std::ops::Index;
+
+
 use crate::color::Color;
 
 pub struct Canvas {

@@ -39,7 +39,7 @@ mod tests {
 
     #[test]
     fn test_write_to_file() {
-        let mut c = Canvas::new(10, 20);
+        let c = Canvas::new(10, 20);
         write_to_file(&c, "./test.ppm");
     }
 
