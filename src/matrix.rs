@@ -459,4 +459,19 @@ mod tests {
         let i = Matrix::identity(4);
         assert_eq!(i.inverse(), i);
     }
+
+    #[test]
+    fn test_inverse_equation() {
+        // C = AB => A = CB^-1
+        let m = Matrix::new(vec![
+            1.0, 3.0, -1.0, 2.0,
+            3.2, 3.1, -1.1, 99.0,
+            12.0, 0.0, 1.0, 2.0,
+            12.0, 13.0, 1.0, 2.0,
+        ], 4, 4);
+        let n = &m.transpose();
+        let c = &m * &n;
+
+        assert_eq!(&c * &n.inverse(), m);
+    }
 }
