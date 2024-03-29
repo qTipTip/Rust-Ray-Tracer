@@ -1,53 +1,52 @@
 use std::ops::{Add, Div, Mul, Neg, Sub};
 
 #[derive(PartialEq, Debug, Copy, Clone)]
-struct Tuple {
-    x: f64,
-    y: f64,
-    z: f64,
-    w: u8,
+pub struct Tuple {
+    pub x: f64,
+    pub y: f64,
+    pub z: f64,
+    pub w: u8,
 }
 
 
-
 impl Tuple {
-    fn new(x: f64, y: f64, z: f64, w: u8) -> Self {
+    pub fn new(x: f64, y: f64, z: f64, w: u8) -> Self {
         Tuple { x, y, z, w }
     }
 
-    fn is_point(&self) -> bool {
+    pub fn is_point(&self) -> bool {
         self.w == 1
     }
 
-    fn is_vector(&self) -> bool {
+    pub fn is_vector(&self) -> bool {
         self.w == 0
     }
 
-    fn point(x: f64, y: f64, z: f64) -> Self {
+    pub fn point(x: f64, y: f64, z: f64) -> Self {
         Tuple { x, y, z, w: 1 }
     }
 
-    fn vector(x: f64, y: f64, z: f64) -> Self {
+    pub fn vector(x: f64, y: f64, z: f64) -> Self {
         Tuple { x, y, z, w: 0 }
     }
 
-    fn origin() -> Self {
+    pub fn origin() -> Self {
         Self::vector(0.0, 0.0, 0.0)
     }
 
-    fn abs(&self) -> f64 {
+    pub fn abs(&self) -> f64 {
         (self.x * self.x + self.y * self.y + self.z * self.z + (self.w * self.w) as f64).sqrt()
     }
 
-    fn norm(&self) -> Self {
+    pub fn norm(&self) -> Self {
         *self / self.abs()
     }
 
-    fn dot(&self, rhs: Self) -> f64 {
+    pub fn dot(&self, rhs: Self) -> f64 {
         self.x * rhs.x + self.y * rhs.y + self.z * rhs.z + (self.w * rhs.w) as f64
     }
 
-    fn cross(&self, rhs: Self) -> Self {
+    pub fn cross(&self, rhs: Self) -> Self {
         Self::vector(self.y * rhs.z - self.z * rhs.y, self.z * rhs.x - self.x * rhs.z, self.x * rhs.y - self.y * rhs.x)
     }
 }
