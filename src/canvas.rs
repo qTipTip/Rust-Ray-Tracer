@@ -1,4 +1,3 @@
-use std::fs::File;
 use std::io::Write;
 use std::ops::Index;
 use crate::color::Color;
@@ -16,35 +15,6 @@ impl Canvas {
 
     pub fn write_pixel(&mut self, x: usize, y: usize, c: Color) {
         self.pixels[x * self.height + y] = c
-    }
-
-    pub fn write_to_file(&self, path: &str) {
-        let mut file = File::create(path).unwrap();
-        let ppm_header = self.create_ppm_header();
-        file.write_all(ppm_header.as_bytes()).unwrap();
-
-        let mut full_ppm_file = "".to_owned();
-        for p in &self.pixels {
-            let rgb_u8 = p.to_tuple();
-            full_ppm_file.push_str(
-                &format!("{} {} {} ", rgb_u8[0], rgb_u8[1], rgb_u8[2])
-            )
-        }
-
-        let text_wrapped_ppm_file = textwrap::wrap(&full_ppm_file, 70);
-        for line in text_wrapped_ppm_file {
-            file.write_all(line.as_bytes()).unwrap();
-            file.write_all(b"\n").unwrap();
-        }
-        file.write_all(b"\n").unwrap();
-    }
-
-    fn create_ppm_header(&self) -> String {
-        format!(r#"
-P3
-{} {}
-255
-"#, self.width, self.height)
     }
 }
 
@@ -95,23 +65,5 @@ mod tests {
         c.write_pixel(2, 4, o);
 
         assert_eq!(c[2][4], o);
-    }
-
-    #[test]
-    fn test_write_to_file() {
-        let mut c = Canvas::new(10, 20);
-        c.write_to_file("./test.ppm");
-    }
-
-    #[test]
-    fn test_create_ppm_header() {
-        let c = Canvas::new(10, 20);
-        let header = c.create_ppm_header();
-
-        assert_eq!(header, r#"
-P3
-10 20
-255
-"#)
     }
 }
