@@ -1,5 +1,6 @@
 use std::ops::Mul;
 use std::vec;
+use crate::color::Color;
 use crate::tuple::Tuple;
 
 #[derive(Debug)]
@@ -91,6 +92,10 @@ impl Matrix {
 
     fn submatrix(&self, row: usize, column: usize) -> Self {
         self.remove_row(row).remove_column(column)
+    }
+
+    fn minor(&self, row: usize, column: usize) -> f64 {
+        self.submatrix(row, column).det()
     }
 }
 
@@ -345,5 +350,17 @@ mod tests {
         ], 3, 3);
 
         assert_eq!(m.submatrix(0, 0), s);
+    }
+
+    #[test]
+    fn test_3x3_minor() {
+        let m = Matrix::new(vec![
+            3.0, 5.0, 0.0,
+            2.0, -1.0, -7.0,
+            6.0, -1.0, 5.0,
+        ], 3, 3);
+
+        assert_eq!(m.submatrix(1, 0).det(), 25.0);
+        assert_eq!(m.minor(1, 0), 25.0);
     }
 }
