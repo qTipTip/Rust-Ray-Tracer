@@ -11,6 +11,14 @@ impl Color {
     pub fn new(red: f64, green: f64, blue: f64) -> Self {
         Self { red, green, blue }
     }
+
+    pub fn to_tuple(&self) -> [u8; 3] {
+        [
+            ((self.red * 255.) as u8).clamp(0, 255),
+            ((self.blue * 255.) as u8).clamp(0, 255),
+            ((self.green * 255.) as u8).clamp(0, 255)
+        ]
+    }
 }
 
 impl PartialEq for Color {
