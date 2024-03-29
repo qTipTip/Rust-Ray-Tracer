@@ -31,6 +31,17 @@ impl Matrix {
         }
     }
 
+    pub fn transpose(&self) -> Self {
+        let mut values = vec![0.0; self.values.len()];
+        for i in 0..self.rows {
+            for j in 0..self.columns {
+                values[j * self.rows + i] = self.values[i * self.columns + j]
+            }
+        }
+
+        Matrix::new(values, self.columns, self.rows)
+    }
+
     pub fn get(&self, i: usize, j: usize) -> f64 {
         self.values[i * self.columns + j]
     }
@@ -203,10 +214,33 @@ mod tests {
         assert_eq!(&m * &i, m);
     }
 
+    #[test]
     fn identity_matrix_tuple_multiplication() {
         let b = Tuple::new(1.0, 2.0, 3.0, 1);
         let i = Matrix::identity(4);
 
         assert_eq!(i * b, b);
+    }
+
+    #[test]
+    fn test_transposition() {
+        let m = Matrix::new(vec![
+            1.0, 2.0,
+            3.0, 4.0,
+            5.0, 6.0,
+        ], 3, 2);
+        let n = Matrix::new(vec![
+            1.0, 3.0, 5.0,
+            2.0, 4.0, 6.0,
+        ], 2, 3);
+
+        assert_eq!(m.transpose(), n);
+    }
+
+    #[test]
+    fn test_identity_transposition() {
+        let i = Matrix::identity(10);
+
+        assert_eq!(i.transpose(), i);
     }
 }
