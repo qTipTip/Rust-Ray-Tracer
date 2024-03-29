@@ -1,6 +1,6 @@
 use std::ops::{Add, Div, Mul, Neg, Sub};
 
-#[derive(PartialEq, Debug, Copy, Clone)]
+#[derive(Debug, Copy, Clone)]
 pub struct Tuple {
     pub x: f64,
     pub y: f64,
@@ -48,6 +48,18 @@ impl Tuple {
 
     pub fn cross(&self, rhs: Self) -> Self {
         Self::vector(self.y * rhs.z - self.z * rhs.y, self.z * rhs.x - self.x * rhs.z, self.x * rhs.y - self.y * rhs.x)
+    }
+}
+
+impl PartialEq for Tuple {
+    fn eq(&self, other: &Self) -> bool {
+        if self.w != other.w {
+            return false;
+        } else {
+            (self.x - other.x).abs() < f64::EPSILON &&
+                (self.y - other.y).abs() < f64::EPSILON &&
+                (self.z - other.z).abs() < f64::EPSILON
+        }
     }
 }
 
