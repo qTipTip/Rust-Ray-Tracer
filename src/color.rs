@@ -1,6 +1,6 @@
 use std::ops::{Add, Mul, Sub};
 
-#[derive(Debug)]
+#[derive(Debug, Clone)]
 pub struct Color {
     pub red: f64,
     pub blue: f64,
