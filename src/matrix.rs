@@ -47,6 +47,10 @@ impl Matrix {
         self.values[i * self.columns + j]
     }
 
+    fn flatten_index(&self, i: usize, j: usize) -> usize {
+        i * self.columns + j
+    }
+
     fn same_dimensions(&self, other: &Self) -> bool {
         if self.values.len() != other.values.len() {
             return false;
@@ -96,6 +100,14 @@ impl Matrix {
 
     fn minor(&self, row: usize, column: usize) -> f64 {
         self.submatrix(row, column).det()
+    }
+
+    fn cofactor(&self, row: usize, column: usize) -> f64 {
+        let mut cofactor = self.minor(row, column);
+        if (row + column) % 2 == 1 {
+            cofactor = -1.0 * cofactor;
+        }
+        cofactor
     }
 }
 
@@ -362,5 +374,19 @@ mod tests {
 
         assert_eq!(m.submatrix(1, 0).det(), 25.0);
         assert_eq!(m.minor(1, 0), 25.0);
+    }
+
+    #[test]
+    fn test_2x2_cofactor() {
+        let m = Matrix::new(vec![
+            3.0, 5.0, 0.0,
+            2.0, -1.0, -7.0,
+            6.0, -1.0, 5.0,
+        ], 3, 3);
+
+        assert_eq!(m.minor(0, 0), -12.0);
+        assert_eq!(m.cofactor(0, 0), -12.0);
+        assert_eq!(m.minor(1, 0), 25.0);
+        assert_eq!(m.cofactor(1, 0), -25.0);
     }
 }
