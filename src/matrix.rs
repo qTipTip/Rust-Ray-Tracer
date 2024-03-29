@@ -1,7 +1,8 @@
+use std::error::Error;
 use std::ops::Mul;
 use std::vec;
-use crate::color::Color;
 use crate::tuple::Tuple;
+use crate::utils;
 
 #[derive(Debug)]
 struct Matrix {
@@ -109,6 +110,27 @@ impl Matrix {
         }
         cofactor
     }
+
+    fn flatten_index(&self, i: usize, j: usize) -> usize {
+        i * self.columns + j
+    }
+
+    fn inverse(&self) -> Self {
+        let determinant = self.det();
+        if determinant.abs() < f64::EPSILON {
+            panic!("Cannot invert non-invertible matrix!")
+        }
+
+        let mut values = vec![0.0; self.values.len()];
+        for i in 0..self.rows {
+            for j in 0..self.columns {
+                // note the transpose here
+                values[self.flatten_index(j, i)] = self.cofactor(i, j) / determinant
+            }
+        }
+
+        Self::new(values, self.rows, self.columns)
+    }
 }
 
 impl PartialEq for Matrix {
@@ -118,7 +140,7 @@ impl PartialEq for Matrix {
         }
 
         for i in 0..self.values.len() {
-            if (self.values[i] - other.values[i]).abs() > f64::EPSILON {
+            if (self.values[i] - other.values[i]).abs() > utils::F64_ERROR_MARGIN {
                 return false;
             }
         }
@@ -395,7 +417,7 @@ mod tests {
         let m = Matrix::new(vec![
             1.0, 2.0, 6.0,
             -5.0, 8.0, -4.0,
-            2.0, 6.0, 4.0
+            2.0, 6.0, 4.0,
         ], 3, 3);
 
         assert_eq!(m.cofactor(0, 0), 56.0);
@@ -410,7 +432,7 @@ mod tests {
             -2.0, -8.0, 3.0, 5.0,
             -3.0, 1.0, 7.0, 3.0,
             1.0, 2.0, -9.0, 6.0,
-            -6.0, 7.0, 7.0, -9.0
+            -6.0, 7.0, 7.0, -9.0,
         ], 4, 4);
 
         assert_eq!(m.cofactor(0, 0), 690.0);
@@ -418,5 +440,23 @@ mod tests {
         assert_eq!(m.cofactor(0, 2), 210.0);
         assert_eq!(m.cofactor(0, 3), 51.0);
         assert_eq!(m.det(), -4071.0);
+    }
+
+    #[test]
+    fn test_inverse() {
+        let m = Matrix::new(vec![
+            -5.0, 2.0, 6.0, -8.0,
+            3.0, 1.0, -5.0, 3.0,
+            9.0, 0.0, 1.3, 2.3,
+            1.9, 2.0, 1.1, 0.0,
+        ], 4, 4);
+
+        assert_eq!(&m * &m.inverse(), Matrix::identity(4));
+    }
+
+    #[test]
+    fn test_inverse_identity() {
+        let i = Matrix::identity(4);
+        assert_eq!(i.inverse(), i);
     }
 }

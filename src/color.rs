@@ -1,4 +1,5 @@
 use std::ops::{Add, Mul, Sub};
+use crate::utils;
 
 #[derive(Debug, Clone, Copy)]
 pub struct Color {
@@ -23,9 +24,9 @@ impl Color {
 
 impl PartialEq for Color {
     fn eq(&self, rhs: &Self) -> bool {
-        (self.blue - rhs.blue).abs() < f64::EPSILON
-            && (self.red - rhs.red).abs() < f64::EPSILON
-            && (self.green - rhs.green).abs() < f64::EPSILON
+        (self.blue - rhs.blue).abs() < utils::F64_ERROR_MARGIN
+            && (self.red - rhs.red).abs() < utils::F64_ERROR_MARGIN
+            && (self.green - rhs.green).abs() < utils::F64_ERROR_MARGIN
     }
 }
 

@@ -3,6 +3,7 @@ mod color;
 mod canvas;
 mod image;
 mod matrix;
+mod utils;
 
 use crate::canvas::Canvas;
 use crate::color::Color;
