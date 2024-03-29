@@ -47,10 +47,6 @@ impl Matrix {
         self.values[i * self.columns + j]
     }
 
-    fn flatten_index(&self, i: usize, j: usize) -> usize {
-        i * self.columns + j
-    }
-
     fn same_dimensions(&self, other: &Self) -> bool {
         if self.values.len() != other.values.len() {
             return false;
@@ -64,9 +60,13 @@ impl Matrix {
 
     fn det(&self) -> f64 {
         if (self.rows, self.columns) == (2, 2) {
-            return self.values[0] * self.values[3] - self.values[1] * self.values[2];
+            self.values[0] * self.values[3] - self.values[1] * self.values[2]
         } else {
-            return 0.0;
+            let mut determinant = 0.0;
+            for i in 0..self.columns {
+                determinant = determinant + self.get(0, i) * self.cofactor(0, i);
+            }
+            determinant
         }
     }
 
@@ -388,5 +388,35 @@ mod tests {
         assert_eq!(m.cofactor(0, 0), -12.0);
         assert_eq!(m.minor(1, 0), 25.0);
         assert_eq!(m.cofactor(1, 0), -25.0);
+    }
+
+    #[test]
+    fn test_3x3_determinant() {
+        let m = Matrix::new(vec![
+            1.0, 2.0, 6.0,
+            -5.0, 8.0, -4.0,
+            2.0, 6.0, 4.0
+        ], 3, 3);
+
+        assert_eq!(m.cofactor(0, 0), 56.0);
+        assert_eq!(m.cofactor(0, 1), 12.0);
+        assert_eq!(m.cofactor(0, 2), -46.0);
+        assert_eq!(m.det(), -196.0);
+    }
+
+    #[test]
+    fn test_4x4_determinant() {
+        let m = Matrix::new(vec![
+            -2.0, -8.0, 3.0, 5.0,
+            -3.0, 1.0, 7.0, 3.0,
+            1.0, 2.0, -9.0, 6.0,
+            -6.0, 7.0, 7.0, -9.0
+        ], 4, 4);
+
+        assert_eq!(m.cofactor(0, 0), 690.0);
+        assert_eq!(m.cofactor(0, 1), 447.0);
+        assert_eq!(m.cofactor(0, 2), 210.0);
+        assert_eq!(m.cofactor(0, 3), 51.0);
+        assert_eq!(m.det(), -4071.0);
     }
 }
