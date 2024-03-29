@@ -14,15 +14,15 @@ impl Canvas {
     }
 
     pub fn write_pixel(&mut self, x: usize, y: usize, c: Color) {
-        self.pixels[x * self.height + y] = c
+        if x >= self.width || y >= self.height {
+            return;
+        }
+
+        self.pixels[self.width * y + x] = c
     }
-}
 
-impl Index<usize> for Canvas {
-    type Output = [Color];
-
-    fn index(&self, index: usize) -> &Self::Output {
-        &self.pixels[index * self.height..(index + 1) * self.height]
+    pub fn get_pixel(&self, x: usize, y: usize) -> Color {
+        self.pixels[self.width * y + x]
     }
 }
 
@@ -45,25 +45,12 @@ mod tests {
     }
 
     #[test]
-    fn test_index_canvas() {
-        let c = Canvas::new(2, 3);
-        let o = Color::new(0.0, 0.0, 0.0);
-        let row = [o, o, o];
-
-        for i in 0..3 {
-            assert_eq!(c[0][i], row[i]);
-        }
-
-        assert_eq!(c[0][0], o)
-    }
-
-    #[test]
     fn test_write_pixel() {
-        let mut c = Canvas::new(10, 20);
+        let mut c = Canvas::new(3, 5);
         let o = Color::new(1.0, 1.0, 1.0);
 
-        c.write_pixel(2, 4, o);
-
-        assert_eq!(c[2][4], o);
+        c.write_pixel(1, 0, o);
+        println!("{:?}", c.pixels);
+        assert_eq!(c.get_pixel(1, 0), o);
     }
 }
