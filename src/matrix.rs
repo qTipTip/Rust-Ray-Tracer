@@ -1,5 +1,6 @@
 use std::ops::Mul;
 use std::vec;
+use crate::tuple::Tuple;
 
 #[derive(Debug)]
 struct Matrix {
@@ -53,12 +54,12 @@ impl Mul for Matrix {
     type Output = Self;
 
     fn mul(self, rhs: Self) -> Self::Output {
-        let mut result_values = vec![0.0; self.values.len()];
+        let mut result_values = vec![0.0; self.rows * rhs.columns];
         for i in 0..self.rows {
             for j in 0..rhs.columns {
                 let mut sum = 0.0;
                 for k in 0..self.columns {
-                    sum += self.values[i * self.columns + k] * rhs.values[j + k * self.rows]
+                    sum += self.values[i * self.columns + k] * rhs.values[j + k * rhs.columns]
                 }
                 result_values[i * rhs.columns + j] = sum;
             }
@@ -72,10 +73,22 @@ impl Mul for Matrix {
     }
 }
 
+impl Mul<Tuple> for Matrix {
+    type Output = Tuple;
+
+    fn mul(self, rhs: Tuple) -> Self::Output {
+        let rhs_matrix = Matrix::new(vec![rhs.x, rhs.y, rhs.z, rhs.w as f64], 4, 1);
+        let result_matrix = self * rhs_matrix;
+
+        Tuple::new(result_matrix.values[0], result_matrix.values[1], result_matrix.values[2], result_matrix.values[3] as u8)
+    }
+}
+
 
 #[cfg(test)]
 mod tests {
     use crate::matrix::Matrix;
+    use crate::tuple::Tuple;
 
     #[test]
     fn construct_matrix() {
@@ -125,5 +138,19 @@ mod tests {
         );
 
         assert_eq!(m1 * m2, m3)
+    }
+
+    #[test]
+    fn matrix_tuple_multiplication() {
+        let m = Matrix::new(vec![
+            1.0, 2.0, 3.0, 4.0,
+            2.0, 4.0, 4.0, 2.0,
+            8.0, 6.0, 4.0, 1.0,
+            0.0, 0.0, 0.0, 1.0,
+        ], 4, 4);
+
+        let b = Tuple::new(1.0, 2.0, 3.0, 1);
+
+        assert_eq!(m * b, Tuple::new(18.0, 24.0, 33.0, 1));
     }
 }
