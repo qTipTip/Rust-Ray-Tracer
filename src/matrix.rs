@@ -191,7 +191,7 @@ mod tests {
     }
 
     #[test]
-    fn identity_matrix() {
+    fn identity_matrix_matrix_multiplication() {
         let m = Matrix::new(vec![
             1.0, 2.0, 3.0, 4.0,
             2.0, 4.0, 4.0, 2.0,
@@ -201,5 +201,12 @@ mod tests {
         let i = Matrix::identity(4);
 
         assert_eq!(&m * &i, m);
+    }
+
+    fn identity_matrix_tuple_multiplication() {
+        let b = Tuple::new(1.0, 2.0, 3.0, 1);
+        let i = Matrix::identity(4);
+
+        assert_eq!(i * b, b);
     }
 }
