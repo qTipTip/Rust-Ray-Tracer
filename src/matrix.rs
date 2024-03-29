@@ -56,6 +56,14 @@ impl Matrix {
         }
         return true;
     }
+
+    fn det(&self) -> f64 {
+        if (self.rows, self.columns) == (2, 2) {
+            return self.values[0] * self.values[3] - self.values[1] * self.values[2];
+        } else {
+            return 0.0;
+        }
+    }
 }
 
 impl PartialEq for Matrix {
@@ -242,5 +250,11 @@ mod tests {
         let i = Matrix::identity(10);
 
         assert_eq!(i.transpose(), i);
+    }
+
+    #[test]
+    fn test_2x2_determinant() {
+        let m = Matrix::new(vec![1.0, 2.0, 3.0, 4.0], 2, 2);
+        assert_eq!(m.det(), -2.0);
     }
 }
