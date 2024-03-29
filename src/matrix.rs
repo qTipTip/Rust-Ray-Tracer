@@ -18,6 +18,19 @@ impl Matrix {
         }
     }
 
+    pub fn identity(dim: usize) -> Self {
+        let mut values = vec![0.0; dim * dim];
+        for i in 0..dim {
+            values[i + i * dim] = 1.0;
+        }
+
+        Self {
+            values,
+            rows: dim,
+            columns: dim,
+        }
+    }
+
     pub fn get(&self, i: usize, j: usize) -> f64 {
         self.values[i * self.columns + j]
     }
@@ -54,6 +67,29 @@ impl Mul for Matrix {
     type Output = Self;
 
     fn mul(self, rhs: Self) -> Self::Output {
+        let mut result_values = vec![0.0; self.rows * rhs.columns];
+        for i in 0..self.rows {
+            for j in 0..rhs.columns {
+                let mut sum = 0.0;
+                for k in 0..self.columns {
+                    sum += self.values[i * self.columns + k] * rhs.values[j + k * rhs.columns]
+                }
+                result_values[i * rhs.columns + j] = sum;
+            }
+        }
+
+        Matrix {
+            values: result_values,
+            rows: self.rows,
+            columns: rhs.columns,
+        }
+    }
+}
+
+impl Mul<&Matrix> for &Matrix {
+    type Output = Matrix;
+
+    fn mul(self, rhs: &Matrix) -> Self::Output {
         let mut result_values = vec![0.0; self.rows * rhs.columns];
         for i in 0..self.rows {
             for j in 0..rhs.columns {
@@ -152,5 +188,18 @@ mod tests {
         let b = Tuple::new(1.0, 2.0, 3.0, 1);
 
         assert_eq!(m * b, Tuple::new(18.0, 24.0, 33.0, 1));
+    }
+
+    #[test]
+    fn identity_matrix() {
+        let m = Matrix::new(vec![
+            1.0, 2.0, 3.0, 4.0,
+            2.0, 4.0, 4.0, 2.0,
+            8.0, 6.0, 4.0, 1.0,
+            0.0, 0.0, 0.0, 1.0,
+        ], 4, 4);
+        let i = Matrix::identity(4);
+
+        assert_eq!(&m * &i, m);
     }
 }
