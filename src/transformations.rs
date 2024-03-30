@@ -62,6 +62,10 @@ fn shearing(xy: f64, xz: f64, yx: f64, yz: f64, zx: f64, zy: f64) -> Matrix {
 
 #[cfg(test)]
 mod tests {
+    use std::f64::consts::PI;
+    use crate::transformations::{rotation_x, scaling, translation};
+    use crate::tuple::Tuple;
+
     mod translation {
         use crate::transformations::translation;
         use crate::tuple::Tuple;
@@ -239,5 +243,31 @@ mod tests {
 
             assert_eq!(t * p, Tuple::point(2.0, 3.0, 7.0));
         }
+    }
+
+    #[test]
+    fn apply_transformations_in_sequence() {
+        let p = Tuple::point(1.0, 0.0, 1.0);
+        let A = rotation_x(PI / 2.0);
+        let B = scaling(5.0, 5.0, 5.0);
+        let C = translation(10.0, 5.0, 7.0);
+
+        let p2 = A * p;
+        assert_eq!(p2, Tuple::point(1.0, -1.0, 0.0));
+
+        let p3 = B * p2;
+        assert_eq!(p3, Tuple::point(5.0, -5.0, 0.0));
+
+        let p4 = C * p3;
+        assert_eq!(p4, Tuple::point(15.0, 0.0, 7.0));
+    }
+
+    fn apply_transformations_chained() {
+        let p = Tuple::point(1.0, 0.0, 1.0);
+        let A = rotation_x(PI / 2.0);
+        let B = scaling(5.0, 5.0, 5.0);
+        let C = translation(10.0, 5.0, 7.0);
+
+        assert_eq!(C * B * A * p, Tuple::point(15.0, 0.0, 7.0));
     }
 }

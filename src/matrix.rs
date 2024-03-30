@@ -59,7 +59,7 @@ impl Matrix {
         if self.rows != other.rows || self.columns != other.columns {
             return false;
         }
-        return true;
+        true
     }
 
     fn det(&self) -> f64 {
@@ -68,7 +68,7 @@ impl Matrix {
         } else {
             let mut determinant = 0.0;
             for i in 0..self.columns {
-                determinant = determinant + self.get(0, i) * self.cofactor(0, i);
+                determinant += self.get(0, i) * self.cofactor(0, i);
             }
             determinant
         }
@@ -109,7 +109,7 @@ impl Matrix {
     fn cofactor(&self, row: usize, column: usize) -> f64 {
         let mut cofactor = self.minor(row, column);
         if (row + column) % 2 == 1 {
-            cofactor = -1.0 * cofactor;
+            cofactor *= -1.0;
         }
         cofactor
     }
@@ -148,7 +148,7 @@ impl PartialEq for Matrix {
             }
         }
 
-        return true;
+        true
     }
 }
 

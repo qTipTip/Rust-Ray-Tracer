@@ -1,4 +1,5 @@
 use std::ops::{Add, Div, Mul, Neg, Sub};
+use crate::utils;
 
 #[derive(Debug, Copy, Clone)]
 pub struct Tuple {
@@ -54,11 +55,11 @@ impl Tuple {
 impl PartialEq for Tuple {
     fn eq(&self, other: &Self) -> bool {
         if self.w != other.w {
-            return false;
+            false
         } else {
-            (self.x - other.x).abs() < f64::EPSILON &&
-                (self.y - other.y).abs() < f64::EPSILON &&
-                (self.z - other.z).abs() < f64::EPSILON
+            (self.x - other.x).abs() < utils::F64_ERROR_MARGIN &&
+                (self.y - other.y).abs() < utils::F64_ERROR_MARGIN &&
+                (self.z - other.z).abs() < utils::F64_ERROR_MARGIN
         }
     }
 }
