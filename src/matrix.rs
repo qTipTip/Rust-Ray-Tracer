@@ -5,7 +5,7 @@ use crate::tuple::Tuple;
 use crate::utils;
 
 #[derive(Debug)]
-struct Matrix {
+pub(crate) struct Matrix {
     values: Vec<f64>,
     rows: usize,
     columns: usize,
