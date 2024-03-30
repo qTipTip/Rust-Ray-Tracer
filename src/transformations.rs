@@ -18,6 +18,36 @@ fn scaling(x: f64, y: f64, z: f64) -> Matrix {
     t
 }
 
+fn rotation_x(r: f64) -> Matrix {
+    let mut t = Matrix::identity(4);
+    t.set(1, 1, f64::cos(r));
+    t.set(1, 2, -f64::sin(r));
+    t.set(2, 1, f64::sin(r));
+    t.set(2, 2, f64::cos(r));
+
+    t
+}
+
+fn rotation_y(r: f64) -> Matrix {
+    let mut t = Matrix::identity(4);
+    t.set(0, 0, f64::cos(r));
+    t.set(0, 2, f64::sin(r));
+    t.set(2, 0, -f64::sin(r));
+    t.set(2, 2, f64::cos(r));
+
+    t
+}
+
+fn rotation_z(r: f64) -> Matrix {
+    let mut t = Matrix::identity(4);
+    t.set(0, 0, f64::cos(r));
+    t.set(0, 1, -f64::sin(r));
+    t.set(1, 0, f64::sin(r));
+    t.set(1, 1, f64::cos(r));
+
+    t
+}
+
 #[cfg(test)]
 mod tests {
     mod translation {
@@ -83,6 +113,66 @@ mod tests {
             let p = Tuple::point(2.0, 3.0, 4.0);
 
             assert_eq!(t * p, Tuple::point(-2.0, 3.0, 4.0));
+        }
+    }
+
+    mod rotations {
+        use std::f64::consts::PI;
+        use crate::transformations::{rotation_x, rotation_y, rotation_z};
+        use crate::tuple::Tuple;
+
+        #[test]
+        fn rotate_around_x_axis() {
+            let p = Tuple::point(0.0, 1.0, 0.0);
+            let r1 = rotation_x(PI / 4.0);
+            let r2 = rotation_x(PI / 2.0);
+
+            assert_eq!(r1 * p, Tuple::point(
+                0.0,
+                f64::sqrt(2.0) / 2.0,
+                f64::sqrt(2.0) / 2.0,
+            ));
+            assert_eq!(r2 * p, Tuple::point(0.0, 0.0, 1.0));
+        }
+
+        #[test]
+        fn inverse_rotate_around_x_axis() {
+            let p = Tuple::point(0.0, 1.0, 0.0);
+            let r1 = rotation_x(PI / 4.0);
+
+            assert_eq!(r1.inverse() * p, Tuple::point(
+                0.0,
+                f64::sqrt(2.0) / 2.0,
+                -f64::sqrt(2.0) / 2.0,
+            ));
+        }
+
+        #[test]
+        fn rotate_around_y_axis() {
+            let p = Tuple::point(0.0, 0.0, 1.0);
+            let r1 = rotation_y(PI / 4.0);
+            let r2 = rotation_y(PI / 2.0);
+
+            assert_eq!(r1 * p, Tuple::point(
+                f64::sqrt(2.0) / 2.0,
+                0.0,
+                f64::sqrt(2.0) / 2.0,
+            ));
+            assert_eq!(r2 * p, Tuple::point(1.0, 0.0, 0.0));
+        }
+
+        #[test]
+        fn rotate_around_z_axis() {
+            let p = Tuple::point(0.0, 1.0, 0.0);
+            let r1 = rotation_z(PI / 4.0);
+            let r2 = rotation_z(PI / 2.0);
+
+            assert_eq!(r1 * p, Tuple::point(
+                -f64::sqrt(2.0) / 2.0,
+                f64::sqrt(2.0) / 2.0,
+                0.0,
+            ));
+            assert_eq!(r2 * p, Tuple::point(-1.0, 0.0, 0.0));
         }
     }
 }

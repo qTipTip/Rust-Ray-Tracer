@@ -1,4 +1,3 @@
-use std::error::Error;
 use std::ops::Mul;
 use std::vec;
 use crate::tuple::Tuple;
