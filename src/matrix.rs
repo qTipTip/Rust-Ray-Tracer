@@ -209,6 +209,17 @@ impl Mul<Tuple> for Matrix {
     }
 }
 
+impl Mul<&Tuple> for &Matrix {
+    type Output = Tuple;
+
+    fn mul(self, rhs: &Tuple) -> Self::Output {
+        let rhs_matrix = Matrix::new(vec![rhs.x, rhs.y, rhs.z, rhs.w as f64], 4, 1);
+        let result_matrix = self * &rhs_matrix;
+
+        Tuple::new(result_matrix.values[0], result_matrix.values[1], result_matrix.values[2], result_matrix.values[3] as u8)
+    }
+}
+
 
 #[cfg(test)]
 mod tests {

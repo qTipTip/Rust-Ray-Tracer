@@ -1,6 +1,6 @@
 use crate::matrix::Matrix;
 
-fn translation(x: f64, y: f64, z: f64) -> Matrix {
+pub fn translation(x: f64, y: f64, z: f64) -> Matrix {
     let mut t = Matrix::identity(4);
     t.set(0, 3, x);
     t.set(1, 3, y);
@@ -9,7 +9,7 @@ fn translation(x: f64, y: f64, z: f64) -> Matrix {
     t
 }
 
-fn scaling(x: f64, y: f64, z: f64) -> Matrix {
+pub fn scaling(x: f64, y: f64, z: f64) -> Matrix {
     let mut t = Matrix::identity(4);
     t.set(0, 0, x);
     t.set(1, 1, y);
@@ -18,7 +18,7 @@ fn scaling(x: f64, y: f64, z: f64) -> Matrix {
     t
 }
 
-fn rotation_x(r: f64) -> Matrix {
+pub fn rotation_x(r: f64) -> Matrix {
     let mut t = Matrix::identity(4);
     t.set(1, 1, f64::cos(r));
     t.set(1, 2, -f64::sin(r));
@@ -28,7 +28,7 @@ fn rotation_x(r: f64) -> Matrix {
     t
 }
 
-fn rotation_y(r: f64) -> Matrix {
+pub fn rotation_y(r: f64) -> Matrix {
     let mut t = Matrix::identity(4);
     t.set(0, 0, f64::cos(r));
     t.set(0, 2, f64::sin(r));
@@ -38,7 +38,7 @@ fn rotation_y(r: f64) -> Matrix {
     t
 }
 
-fn rotation_z(r: f64) -> Matrix {
+pub fn rotation_z(r: f64) -> Matrix {
     let mut t = Matrix::identity(4);
     t.set(0, 0, f64::cos(r));
     t.set(0, 1, -f64::sin(r));
@@ -48,7 +48,7 @@ fn rotation_z(r: f64) -> Matrix {
     t
 }
 
-fn shearing(xy: f64, xz: f64, yx: f64, yz: f64, zx: f64, zy: f64) -> Matrix {
+pub fn shearing(xy: f64, xz: f64, yx: f64, yz: f64, zx: f64, zy: f64) -> Matrix {
     let mut t = Matrix::identity(4);
     t.set(0, 1, xy);
     t.set(0, 2, xz);
