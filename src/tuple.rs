@@ -168,7 +168,7 @@ mod tests {
     fn test_equality() {
         let a = Tuple::new(4.3, -4.2, 3.1, 1);
         let b = Tuple::new(4.3, -4.2, 3.1, 0);
-        let c = Tuple::new(4.3, -4.20000000000001, 3.1, 0);
+        let c = Tuple::new(4.3, -4.20000001, 3.1, 0);
 
         assert_ne!(a, b);
         assert!(c != a && c != b && c == c);

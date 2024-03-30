@@ -484,7 +484,7 @@ mod tests {
             12.0, 13.0, 1.0, 2.0,
         ], 4, 4);
         let n = &m.transpose();
-        let c = &m * &n;
+        let c = &m * n;
 
         assert_eq!(&c * &n.inverse(), m);
     }

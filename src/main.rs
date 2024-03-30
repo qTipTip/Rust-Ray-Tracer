@@ -7,6 +7,7 @@ mod utils;
 mod transformations;
 mod clock;
 mod projectile;
+mod ray;
 
 use crate::clock::clock;
 use crate::projectile::projectile;
