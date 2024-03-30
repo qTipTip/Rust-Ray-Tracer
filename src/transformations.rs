@@ -76,5 +76,13 @@ mod tests {
 
             assert_eq!(t.inverse() * v, Tuple::vector(-2.0, 2.0, 2.0));
         }
+
+        #[test]
+        fn reflection_is_negative_scaling() {
+            let t = scaling(-1.0, 1.0, 1.0);
+            let p = Tuple::point(2.0, 3.0, 4.0);
+
+            assert_eq!(t * p, Tuple::point(-2.0, 3.0, 4.0));
+        }
     }
 }
