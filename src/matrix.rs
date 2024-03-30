@@ -45,9 +45,13 @@ impl Matrix {
     }
 
     pub fn get(&self, i: usize, j: usize) -> f64 {
-        self.values[i * self.columns + j]
+        self.values[self.flatten_index(i, j)]
     }
 
+    pub fn set(&mut self, i: usize, j: usize, value: f64) {
+        let idx = self.flatten_index(i, j);
+        self.values[idx] = value;
+    }
     fn same_dimensions(&self, other: &Self) -> bool {
         if self.values.len() != other.values.len() {
             return false;
@@ -115,7 +119,7 @@ impl Matrix {
         i * self.columns + j
     }
 
-    fn inverse(&self) -> Self {
+    pub(crate) fn inverse(&self) -> Self {
         let determinant = self.det();
         if determinant.abs() < f64::EPSILON {
             panic!("Cannot invert non-invertible matrix!")
