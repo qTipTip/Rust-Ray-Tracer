@@ -32,6 +32,10 @@ impl Tuple {
     }
 
     pub fn origin() -> Self {
+        Self::point(0.0, 0.0, 0.0)
+    }
+
+    pub fn zero_vector() -> Self {
         Self::vector(0.0, 0.0, 0.0)
     }
 
@@ -94,7 +98,7 @@ impl Neg for Tuple {
     type Output = Self;
 
     fn neg(self) -> Self::Output {
-        Self::origin() - self
+        Self::zero_vector() - self
     }
 }
 

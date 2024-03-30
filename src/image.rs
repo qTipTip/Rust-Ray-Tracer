@@ -36,7 +36,6 @@ mod tests {
     use crate::canvas::Canvas;
     use crate::image::{create_ppm_header, write_to_file};
 
-
     #[test]
     fn test_create_ppm_header() {
         let c = Canvas::new(10, 20);

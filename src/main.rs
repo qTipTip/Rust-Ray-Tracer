@@ -8,6 +8,7 @@ mod transformations;
 mod clock;
 mod projectile;
 mod ray;
+mod sphere;
 
 use crate::clock::clock;
 use crate::projectile::projectile;
