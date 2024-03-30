@@ -48,6 +48,18 @@ fn rotation_z(r: f64) -> Matrix {
     t
 }
 
+fn shearing(xy: f64, xz: f64, yx: f64, yz: f64, zx: f64, zy: f64) -> Matrix {
+    let mut t = Matrix::identity(4);
+    t.set(0, 1, xy);
+    t.set(0, 2, xz);
+    t.set(1, 0, yx);
+    t.set(1, 2, yz);
+    t.set(2, 0, zx);
+    t.set(2, 1, zy);
+
+    t
+}
+
 #[cfg(test)]
 mod tests {
     mod translation {
@@ -173,6 +185,59 @@ mod tests {
                 0.0,
             ));
             assert_eq!(r2 * p, Tuple::point(-1.0, 0.0, 0.0));
+        }
+    }
+
+    mod shearing {
+        use crate::transformations::shearing;
+        use crate::tuple::Tuple;
+
+        #[test]
+        fn shear_x_rel_y() {
+            let t = shearing(1.0, 0.0, 0.0, 0.0, 0.0, 0.0);
+            let p = Tuple::point(2.0, 3.0, 4.0);
+
+            assert_eq!(t * p, Tuple::point(5.0, 3.0, 4.0));
+        }
+
+        #[test]
+        fn shear_x_rel_z() {
+            let t = shearing(0.0, 1.0, 0.0, 0.0, 0.0, 0.0);
+            let p = Tuple::point(2.0, 3.0, 4.0);
+
+            assert_eq!(t * p, Tuple::point(6.0, 3.0, 4.0));
+        }
+
+        #[test]
+        fn shear_y_rel_x() {
+            let t = shearing(0.0, 0.0, 1.0, 0.0, 0.0, 0.0);
+            let p = Tuple::point(2.0, 3.0, 4.0);
+
+            assert_eq!(t * p, Tuple::point(2.0, 5.0, 4.0));
+        }
+
+        #[test]
+        fn shear_y_rel_z() {
+            let t = shearing(0.0, 0.0, 0.0, 1.0, 0.0, 0.0);
+            let p = Tuple::point(2.0, 3.0, 4.0);
+
+            assert_eq!(t * p, Tuple::point(2.0, 7.0, 4.0));
+        }
+
+        #[test]
+        fn shear_z_rel_x() {
+            let t = shearing(0.0, 0.0, 0.0, 0.0, 1.0, 0.0);
+            let p = Tuple::point(2.0, 3.0, 4.0);
+
+            assert_eq!(t * p, Tuple::point(2.0, 3.0, 6.0));
+        }
+
+        #[test]
+        fn shear_z_rel_y() {
+            let t = shearing(0.0, 0.0, 0.0, 0.0, 0.0, 1.0);
+            let p = Tuple::point(2.0, 3.0, 4.0);
+
+            assert_eq!(t * p, Tuple::point(2.0, 3.0, 7.0));
         }
     }
 }
