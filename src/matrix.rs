@@ -1,11 +1,10 @@
-use std::error::Error;
 use std::ops::Mul;
 use std::vec;
 use crate::tuple::Tuple;
 use crate::utils;
 
 #[derive(Debug)]
-struct Matrix {
+pub(crate) struct Matrix {
     values: Vec<f64>,
     rows: usize,
     columns: usize,
@@ -45,9 +44,13 @@ impl Matrix {
     }
 
     pub fn get(&self, i: usize, j: usize) -> f64 {
-        self.values[i * self.columns + j]
+        self.values[self.flatten_index(i, j)]
     }
 
+    pub fn set(&mut self, i: usize, j: usize, value: f64) {
+        let idx = self.flatten_index(i, j);
+        self.values[idx] = value;
+    }
     fn same_dimensions(&self, other: &Self) -> bool {
         if self.values.len() != other.values.len() {
             return false;
@@ -56,7 +59,7 @@ impl Matrix {
         if self.rows != other.rows || self.columns != other.columns {
             return false;
         }
-        return true;
+        true
     }
 
     fn det(&self) -> f64 {
@@ -65,7 +68,7 @@ impl Matrix {
         } else {
             let mut determinant = 0.0;
             for i in 0..self.columns {
-                determinant = determinant + self.get(0, i) * self.cofactor(0, i);
+                determinant += self.get(0, i) * self.cofactor(0, i);
             }
             determinant
         }
@@ -106,7 +109,7 @@ impl Matrix {
     fn cofactor(&self, row: usize, column: usize) -> f64 {
         let mut cofactor = self.minor(row, column);
         if (row + column) % 2 == 1 {
-            cofactor = -1.0 * cofactor;
+            cofactor *= -1.0;
         }
         cofactor
     }
@@ -115,7 +118,7 @@ impl Matrix {
         i * self.columns + j
     }
 
-    fn inverse(&self) -> Self {
+    pub(crate) fn inverse(&self) -> Self {
         let determinant = self.det();
         if determinant.abs() < f64::EPSILON {
             panic!("Cannot invert non-invertible matrix!")
@@ -145,7 +148,7 @@ impl PartialEq for Matrix {
             }
         }
 
-        return true;
+        true
     }
 }
 
@@ -201,6 +204,17 @@ impl Mul<Tuple> for Matrix {
     fn mul(self, rhs: Tuple) -> Self::Output {
         let rhs_matrix = Matrix::new(vec![rhs.x, rhs.y, rhs.z, rhs.w as f64], 4, 1);
         let result_matrix = self * rhs_matrix;
+
+        Tuple::new(result_matrix.values[0], result_matrix.values[1], result_matrix.values[2], result_matrix.values[3] as u8)
+    }
+}
+
+impl Mul<&Tuple> for &Matrix {
+    type Output = Tuple;
+
+    fn mul(self, rhs: &Tuple) -> Self::Output {
+        let rhs_matrix = Matrix::new(vec![rhs.x, rhs.y, rhs.z, rhs.w as f64], 4, 1);
+        let result_matrix = self * &rhs_matrix;
 
         Tuple::new(result_matrix.values[0], result_matrix.values[1], result_matrix.values[2], result_matrix.values[3] as u8)
     }

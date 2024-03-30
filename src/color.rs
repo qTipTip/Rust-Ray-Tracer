@@ -13,7 +13,7 @@ impl Color {
         Self { red, green, blue }
     }
 
-    pub fn to_tuple(&self) -> [u8; 3] {
+    pub fn to_tuple(self) -> [u8; 3] {
         [
             ((self.red * 255.) as u8).clamp(0, 255),
             ((self.blue * 255.) as u8).clamp(0, 255),

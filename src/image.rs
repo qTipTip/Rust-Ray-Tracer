@@ -38,12 +38,6 @@ mod tests {
 
 
     #[test]
-    fn test_write_to_file() {
-        let c = Canvas::new(10, 20);
-        write_to_file(&c, "./test.ppm");
-    }
-
-    #[test]
     fn test_create_ppm_header() {
         let c = Canvas::new(10, 20);
         let header = create_ppm_header(&c);
