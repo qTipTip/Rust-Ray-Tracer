@@ -1,7 +1,7 @@
 use crate::ray;
 use crate::tuple::Tuple;
 
-#[derive(Debug, PartialEq)]
+#[derive(Debug, PartialEq, Copy, Clone)]
 pub struct Sphere {
     radius: f64,
     origin: Tuple,

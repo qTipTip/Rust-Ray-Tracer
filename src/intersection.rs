@@ -1,11 +1,12 @@
 use crate::ray::Intersect;
 use crate::utils;
 use std::any::Any;
+use crate::sphere::Sphere;
 
-#[derive(Debug)]
+#[derive(Debug, Copy, Clone)]
 struct Intersection {
     time: f64,
-    object: Box<dyn Intersect>,
+    object: Sphere,
 }
 
 impl PartialEq for Intersection {
@@ -36,22 +37,22 @@ mod tests {
     fn intersection_stores_time_and_object() {
         let i = Intersection {
             time: 1.3,
-            object: Box::new(Sphere::unit()),
+            object: Sphere::unit(),
         };
 
         assert_eq!(i.time, 1.3);
-        assert_eq!(i.object, Box::new(Sphere::unit()));
+        assert_eq!(i.object, Sphere::unit());
     }
 
     #[test]
     fn intersection_aggregates_are_accessible() {
         let i1 = Intersection {
             time: 1.3,
-            object: Box::new(Sphere::unit()),
+            object:Sphere::unit(),
         };
         let i2 = Intersection {
             time: 1.4,
-            object: Box::new(Sphere::unit()),
+            object: Sphere::unit(),
         };
 
         let I = Intersections {
