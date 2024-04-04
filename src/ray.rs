@@ -1,3 +1,4 @@
+use crate::intersection::Intersections;
 use crate::tuple::Tuple;
 
 
@@ -7,7 +8,7 @@ pub struct Ray {
 }
 
 pub trait Intersect: std::fmt::Debug {
-    fn ray_intersections(&self, ray: &Ray) -> Vec<f64>;
+    fn ray_intersections(&self, ray: &Ray) -> Intersections;
 }
 
 impl Ray {
@@ -22,7 +23,7 @@ impl Ray {
         self.origin + self.direction * t
     }
 
-    fn intersect(&self, object: &impl Intersect) -> Vec<f64> {
+    fn intersect(&self, object: &impl Intersect) -> Intersections {
         object.ray_intersections(self)
     }
 }
@@ -62,8 +63,8 @@ mod tests {
         let s = Sphere::new(1.0, Tuple::origin());
         let xs = r.intersect(&s);
         assert_eq!(xs.len(), 2);
-        assert_eq!(xs[0], 4.0);
-        assert_eq!(xs[1], 6.0);
+        assert_eq!(xs[0].time, 4.0);
+        assert_eq!(xs[1].time, 6.0);
     }
 
     #[test]
@@ -73,8 +74,8 @@ mod tests {
         let s = Sphere::new(1.0, Tuple::origin());
         let xs = r.intersect(&s);
         assert_eq!(xs.len(), 2);
-        assert_eq!(xs[0], 5.0);
-        assert_eq!(xs[1], 5.0);
+        assert_eq!(xs[0].time, 5.0);
+        assert_eq!(xs[1].time, 5.0);
     }
 
     #[test]
@@ -93,8 +94,8 @@ mod tests {
         let s = Sphere::new(1.0, Tuple::origin());
         let xs = r.intersect(&s);
         assert_eq!(xs.len(), 2);
-        assert_eq!(xs[0], -1.0);
-        assert_eq!(xs[1], 1.0);
+        assert_eq!(xs[0].time, -1.0);
+        assert_eq!(xs[1].time, 1.0);
     }
 
     #[test]
@@ -104,7 +105,7 @@ mod tests {
         let s = Sphere::new(1.0, Tuple::origin());
         let xs = r.intersect(&s);
         assert_eq!(xs.len(), 2);
-        assert_eq!(xs[0], -6.0);
-        assert_eq!(xs[1], -4.0);
+        assert_eq!(xs[0].time, -6.0);
+        assert_eq!(xs[1].time, -4.0);
     }
 }

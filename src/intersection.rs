@@ -1,12 +1,12 @@
-
 use crate::utils;
 use std::any::Any;
+use std::ops::Index;
 use crate::sphere::Sphere;
 
 #[derive(Debug, Copy, Clone)]
-struct Intersection {
-    time: f64,
-    object: Sphere,
+pub struct Intersection {
+    pub time: f64,
+    pub object: Sphere,
 }
 
 impl PartialEq for Intersection {
@@ -23,10 +23,26 @@ impl PartialEq for Intersection {
     }
 }
 
+
 #[derive(Debug)]
-struct Intersections {
-    objects: Vec<Intersection>,
+pub struct Intersections {
+    pub objects: Vec<Intersection>,
 }
+
+impl Index<usize> for Intersections {
+    type Output = Intersection;
+
+    fn index(&self, index: usize) -> &Self::Output {
+        &self.objects[index]
+    }
+}
+
+impl Intersections {
+    pub fn len(&self) -> usize {
+        self.objects.len()
+    }
+}
+
 
 #[cfg(test)]
 mod tests {
@@ -48,18 +64,18 @@ mod tests {
     fn intersection_aggregates_are_accessible() {
         let i1 = Intersection {
             time: 1.3,
-            object:Sphere::unit(),
+            object: Sphere::unit(),
         };
         let i2 = Intersection {
             time: 1.4,
             object: Sphere::unit(),
         };
 
-        let I = Intersections {
+        let i = Intersections {
             objects: vec![i1, i2],
         };
 
-        assert_eq!(I.objects[0], i1);
-        assert_eq!(I.objects[1], i2);
+        assert_eq!(i.objects[0], i1);
+        assert_eq!(i.objects[1], i2);
     }
 }

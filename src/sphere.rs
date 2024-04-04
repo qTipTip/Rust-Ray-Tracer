@@ -1,3 +1,4 @@
+use crate::intersection::{Intersections, Intersection};
 use crate::ray;
 use crate::tuple::Tuple;
 
@@ -20,7 +21,7 @@ impl Sphere {
 }
 
 impl ray::Intersect for Sphere {
-    fn ray_intersections(&self, ray: &ray::Ray) -> Vec<f64> {
+    fn ray_intersections(&self, ray: &ray::Ray) -> Intersections {
         let sphere_to_ray = ray.origin - self.origin;
 
         let a = ray.direction.dot(ray.direction);
@@ -30,14 +31,19 @@ impl ray::Intersect for Sphere {
         let discriminant = b * b - 4.0 * a * c;
 
         if discriminant < 0.0 {
-            Vec::new()
+            Intersections { objects: vec![] }
         } else {
             let disc_sqrt = discriminant.sqrt();
             let denom = 2.0 * a;
             let r1 = (-b - disc_sqrt) / (denom);
             let r2 = (-b + disc_sqrt) / (denom);
 
-            vec![r1, r2]
+            Intersections {
+                objects: vec![
+                    Intersection { time: r1, object: *self },
+                    Intersection { time: r2, object: *self },
+                ]
+            }
         }
     }
 }
