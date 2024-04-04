@@ -258,6 +258,7 @@ mod tests {
         assert_eq!(p4, Tuple::point(15.0, 0.0, 7.0));
     }
 
+    #[test]
     fn apply_transformations_chained() {
         let p = Tuple::point(1.0, 0.0, 1.0);
         let a = rotation_x(PI / 2.0);
