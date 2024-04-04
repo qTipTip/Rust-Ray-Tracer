@@ -1,4 +1,4 @@
-use crate::ray::Intersect;
+
 use crate::utils;
 use std::any::Any;
 use crate::sphere::Sphere;

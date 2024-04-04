@@ -1,5 +1,5 @@
 use crate::tuple::Tuple;
-use std::any::Any;
+
 
 pub struct Ray {
     pub origin: Tuple,
