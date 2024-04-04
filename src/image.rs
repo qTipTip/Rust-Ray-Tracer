@@ -35,7 +35,7 @@ P3
 #[cfg(test)]
 mod tests {
     use crate::canvas::Canvas;
-    use crate::image::{create_ppm_header, write_to_file};
+    use crate::image::create_ppm_header;
 
     #[test]
     fn test_create_ppm_header() {
