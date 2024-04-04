@@ -1,7 +1,5 @@
 use crate::ray;
-use crate::ray::{Intersect, Ray};
 use crate::tuple::Tuple;
-use std::any::Any;
 
 #[derive(Debug, PartialEq)]
 pub struct Sphere {
@@ -22,7 +20,7 @@ impl Sphere {
 }
 
 impl ray::Intersect for Sphere {
-    fn ray_intersections(&self, ray: &Ray) -> Vec<f64> {
+    fn ray_intersections(&self, ray: &ray::Ray) -> Vec<f64> {
         let sphere_to_ray = ray.origin - self.origin;
 
         let a = ray.direction.dot(ray.direction);
