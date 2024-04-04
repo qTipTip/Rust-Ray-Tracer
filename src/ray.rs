@@ -60,7 +60,7 @@ mod tests {
     fn test_intersect_sphere() {
         let r = Ray::new(Tuple::point(0.0, 0.0, -5.0), Tuple::vector(0.0, 0.0, 1.0));
 
-        let s = Sphere::new(1.0, Tuple::origin());
+        let s = Sphere::unit();
         let xs = r.intersect(&s);
         assert_eq!(xs.len(), 2);
         assert_eq!(xs[0].time, 4.0);
@@ -71,7 +71,7 @@ mod tests {
     fn test_intersect_sphere_at_tangent() {
         let r = Ray::new(Tuple::point(0.0, 1.0, -5.0), Tuple::vector(0.0, 0.0, 1.0));
 
-        let s = Sphere::new(1.0, Tuple::origin());
+        let s = Sphere::unit();
         let xs = r.intersect(&s);
         assert_eq!(xs.len(), 2);
         assert_eq!(xs[0].time, 5.0);
@@ -82,7 +82,7 @@ mod tests {
     fn test_does_not_intersect_sphere() {
         let r = Ray::new(Tuple::point(0.0, 1.1, -5.0), Tuple::vector(0.0, 0.0, 1.0));
 
-        let s = Sphere::new(1.0, Tuple::origin());
+        let s = Sphere::unit();
         let xs = r.intersect(&s);
         assert_eq!(xs.len(), 0);
     }
@@ -91,7 +91,7 @@ mod tests {
     fn test_intersect_from_inside() {
         let r = Ray::new(Tuple::point(0.0, 0.0, 0.0), Tuple::vector(0.0, 0.0, 1.0));
 
-        let s = Sphere::new(1.0, Tuple::origin());
+        let s = Sphere::unit();
         let xs = r.intersect(&s);
         assert_eq!(xs.len(), 2);
         assert_eq!(xs[0].time, -1.0);
@@ -102,10 +102,25 @@ mod tests {
     fn test_intersect_from_behind() {
         let r = Ray::new(Tuple::point(0.0, 0.0, 5.0), Tuple::vector(0.0, 0.0, 1.0));
 
-        let s = Sphere::new(1.0, Tuple::origin());
+        let s = Sphere::unit();
         let xs = r.intersect(&s);
         assert_eq!(xs.len(), 2);
         assert_eq!(xs[0].time, -6.0);
         assert_eq!(xs[1].time, -4.0);
+    }
+
+    #[test]
+    fn test_intersection_has_object_reference() {
+        let r = Ray::new(
+            Tuple::point(0.0, 0.0, -0.5),
+            Tuple::vector(0.0, 0.0, 1.0)
+        );
+        let s = Sphere::unit();
+        let xs = r.intersect(&s);
+
+        assert_eq!(xs.len(), 2);
+        assert_eq!(xs[0].object, s);
+        assert_eq!(xs[1].object, s);
+
     }
 }
