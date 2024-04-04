@@ -1,5 +1,5 @@
-use std::ops::{Add, Mul, Sub};
 use crate::utils;
+use std::ops::{Add, Mul, Sub};
 
 #[derive(Debug, Clone, Copy)]
 pub struct Color {
@@ -17,7 +17,7 @@ impl Color {
         [
             ((self.red * 255.) as u8).clamp(0, 255),
             ((self.blue * 255.) as u8).clamp(0, 255),
-            ((self.green * 255.) as u8).clamp(0, 255)
+            ((self.green * 255.) as u8).clamp(0, 255),
         ]
     }
 }
@@ -30,12 +30,15 @@ impl PartialEq for Color {
     }
 }
 
-
 impl Add for Color {
     type Output = Self;
 
     fn add(self, rhs: Self) -> Self::Output {
-        Color::new(self.red + rhs.red, self.green + rhs.green, self.blue + rhs.blue)
+        Color::new(
+            self.red + rhs.red,
+            self.green + rhs.green,
+            self.blue + rhs.blue,
+        )
     }
 }
 
@@ -43,7 +46,11 @@ impl Sub for Color {
     type Output = Self;
 
     fn sub(self, rhs: Self) -> Self::Output {
-        Color::new(self.red - rhs.red, self.green - rhs.green, self.blue - rhs.blue)
+        Color::new(
+            self.red - rhs.red,
+            self.green - rhs.green,
+            self.blue - rhs.blue,
+        )
     }
 }
 
@@ -51,7 +58,11 @@ impl Mul for Color {
     type Output = Self;
 
     fn mul(self, rhs: Self) -> Self::Output {
-        Color::new(self.red * rhs.red, self.green * rhs.green, self.blue * rhs.blue)
+        Color::new(
+            self.red * rhs.red,
+            self.green * rhs.green,
+            self.blue * rhs.blue,
+        )
     }
 }
 
@@ -75,7 +86,6 @@ mod tests {
         assert_eq!(c.green, 0.4);
         assert_eq!(c.blue, 1.7);
     }
-
 
     #[test]
     fn add_colors() {

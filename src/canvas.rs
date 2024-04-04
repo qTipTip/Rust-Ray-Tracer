@@ -1,5 +1,3 @@
-
-
 use crate::color::Color;
 
 pub struct Canvas {
@@ -10,7 +8,11 @@ pub struct Canvas {
 
 impl Canvas {
     pub fn new(width: usize, height: usize) -> Self {
-        Self { width, height, pixels: vec![Color::new(0.0, 0.0, 0.0); width * height] }
+        Self {
+            width,
+            height,
+            pixels: vec![Color::new(0.0, 0.0, 0.0); width * height],
+        }
     }
 
     pub fn write_pixel(&mut self, x: usize, y: usize, c: Color) {

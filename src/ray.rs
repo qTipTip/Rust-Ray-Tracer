@@ -1,11 +1,12 @@
 use crate::tuple::Tuple;
+use std::any::Any;
 
 pub struct Ray {
     pub origin: Tuple,
     pub direction: Tuple,
 }
 
-pub trait Intersect {
+pub trait Intersect: std::fmt::Debug {
     fn ray_intersections(&self, ray: &Ray) -> Vec<f64>;
 }
 
@@ -36,10 +37,7 @@ mod tests {
     fn create_ray() {
         let origin = Tuple::point(1.0, 2.0, 3.0);
         let direction = Tuple::vector(4.0, 5.0, 6.0);
-        let r = Ray::new(
-            origin,
-            direction,
-        );
+        let r = Ray::new(origin, direction);
 
         assert_eq!(r.origin, origin);
         assert_eq!(r.direction, direction);
@@ -49,10 +47,7 @@ mod tests {
     fn compute_position() {
         let origin = Tuple::point(2.0, 3.0, 4.0);
         let direction = Tuple::vector(1.0, 0.0, 0.0);
-        let r = Ray::new(
-            origin,
-            direction,
-        );
+        let r = Ray::new(origin, direction);
 
         assert_eq!(r.position(0.0), origin);
         assert_eq!(r.position(1.0), Tuple::point(3.0, 3.0, 4.0));
@@ -62,10 +57,7 @@ mod tests {
 
     #[test]
     fn test_intersect_sphere() {
-        let r = Ray::new(
-            Tuple::point(0.0, 0.0, -5.0),
-            Tuple::vector(0.0, 0.0, 1.0),
-        );
+        let r = Ray::new(Tuple::point(0.0, 0.0, -5.0), Tuple::vector(0.0, 0.0, 1.0));
 
         let s = Sphere::new(1.0, Tuple::origin());
         let xs = r.intersect(&s);
@@ -76,10 +68,7 @@ mod tests {
 
     #[test]
     fn test_intersect_sphere_at_tangent() {
-        let r = Ray::new(
-            Tuple::point(0.0, 1.0, -5.0),
-            Tuple::vector(0.0, 0.0, 1.0),
-        );
+        let r = Ray::new(Tuple::point(0.0, 1.0, -5.0), Tuple::vector(0.0, 0.0, 1.0));
 
         let s = Sphere::new(1.0, Tuple::origin());
         let xs = r.intersect(&s);
@@ -90,10 +79,7 @@ mod tests {
 
     #[test]
     fn test_does_not_intersect_sphere() {
-        let r = Ray::new(
-            Tuple::point(0.0, 1.1, -5.0),
-            Tuple::vector(0.0, 0.0, 1.0),
-        );
+        let r = Ray::new(Tuple::point(0.0, 1.1, -5.0), Tuple::vector(0.0, 0.0, 1.0));
 
         let s = Sphere::new(1.0, Tuple::origin());
         let xs = r.intersect(&s);
@@ -102,10 +88,7 @@ mod tests {
 
     #[test]
     fn test_intersect_from_inside() {
-        let r = Ray::new(
-            Tuple::point(0.0, 0.0, 0.0),
-            Tuple::vector(0.0, 0.0, 1.0),
-        );
+        let r = Ray::new(Tuple::point(0.0, 0.0, 0.0), Tuple::vector(0.0, 0.0, 1.0));
 
         let s = Sphere::new(1.0, Tuple::origin());
         let xs = r.intersect(&s);
@@ -116,10 +99,7 @@ mod tests {
 
     #[test]
     fn test_intersect_from_behind() {
-        let r = Ray::new(
-            Tuple::point(0.0, 0.0, 5.0),
-            Tuple::vector(0.0, 0.0, 1.0),
-        );
+        let r = Ray::new(Tuple::point(0.0, 0.0, 5.0), Tuple::vector(0.0, 0.0, 1.0));
 
         let s = Sphere::new(1.0, Tuple::origin());
         let xs = r.intersect(&s);

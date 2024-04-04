@@ -1,6 +1,6 @@
+use crate::canvas::Canvas;
 use std::fs::File;
 use std::io::Write;
-use crate::canvas::Canvas;
 
 pub fn write_to_file(canvas: &Canvas, path: &str) {
     let mut file = File::create(path).unwrap();
@@ -10,9 +10,7 @@ pub fn write_to_file(canvas: &Canvas, path: &str) {
     let mut full_ppm_file = "".to_owned();
     for p in &canvas.pixels {
         let rgb_u8 = p.to_tuple();
-        full_ppm_file.push_str(
-            &format!("{} {} {} ", rgb_u8[0], rgb_u8[1], rgb_u8[2])
-        )
+        full_ppm_file.push_str(&format!("{} {} {} ", rgb_u8[0], rgb_u8[1], rgb_u8[2]))
     }
 
     let text_wrapped_ppm_file = textwrap::wrap(&full_ppm_file, 70);
@@ -24,11 +22,14 @@ pub fn write_to_file(canvas: &Canvas, path: &str) {
 }
 
 fn create_ppm_header(canvas: &Canvas) -> String {
-    format!(r#"
+    format!(
+        r#"
 P3
 {} {}
 255
-"#, canvas.width, canvas.height)
+"#,
+        canvas.width, canvas.height
+    )
 }
 
 #[cfg(test)]
@@ -41,10 +42,13 @@ mod tests {
         let c = Canvas::new(10, 20);
         let header = create_ppm_header(&c);
 
-        assert_eq!(header, r#"
+        assert_eq!(
+            header,
+            r#"
 P3
 10 20
 255
-"#)
+"#
+        )
     }
 }

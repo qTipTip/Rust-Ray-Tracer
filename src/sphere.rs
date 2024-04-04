@@ -1,7 +1,9 @@
 use crate::ray;
-use crate::ray::Ray;
+use crate::ray::{Intersect, Ray};
 use crate::tuple::Tuple;
+use std::any::Any;
 
+#[derive(Debug, PartialEq)]
 pub struct Sphere {
     radius: f64,
     origin: Tuple,
@@ -10,6 +12,12 @@ pub struct Sphere {
 impl Sphere {
     pub(crate) fn new(radius: f64, origin: Tuple) -> Self {
         Sphere { radius, origin }
+    }
+    pub fn unit() -> Self {
+        Sphere {
+            radius: 1.0,
+            origin: Tuple::origin(),
+        }
     }
 }
 
