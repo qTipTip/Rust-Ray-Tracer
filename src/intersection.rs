@@ -41,6 +41,23 @@ impl Intersections {
     pub fn len(&self) -> usize {
         self.objects.len()
     }
+
+    pub fn get_hit(&self) -> Option<Intersection> {
+        let min_intersect = self.objects.iter().
+            filter(|a| a.time >= 0.0).
+            min_by(|
+                a,
+                b
+            | a.time.partial_cmp(&b.time).unwrap());
+        match min_intersect {
+            None => { None }
+            Some(i) => {
+                if i.time < 0.0 {
+                    None
+                } else { Some(*i) }
+            }
+        }
+    }
 }
 
 
@@ -77,5 +94,64 @@ mod tests {
 
         assert_eq!(i.objects[0], i1);
         assert_eq!(i.objects[1], i2);
+    }
+
+    #[test]
+    fn intersections_yields_hit() {
+        let i1 = Intersection {
+            time: 1.0,
+            object: Sphere::unit(),
+        };
+        let i2 = Intersection {
+            time: 2.0,
+            object: Sphere::unit(),
+        };
+
+        let i = Intersections {
+            objects: vec![i1, i2],
+        };
+
+        let hit = i.get_hit().unwrap();
+
+        assert_eq!(i1, hit);
+    }
+
+    #[test]
+    fn intersections_yields_hit_some_negative() {
+        let i1 = Intersection {
+            time: -1.0,
+            object: Sphere::unit(),
+        };
+        let i2 = Intersection {
+            time: 2.0,
+            object: Sphere::unit(),
+        };
+
+        let i = Intersections {
+            objects: vec![i1, i2],
+        };
+
+        let hit = i.get_hit().unwrap();
+
+        assert_eq!(i2, hit);
+    }
+
+    #[test]
+    fn intersections_yields_hit_all_negative() {
+        let i1 = Intersection {
+            time: -1.0,
+            object: Sphere::unit(),
+        };
+        let i2 = Intersection {
+            time: -2.0,
+            object: Sphere::unit(),
+        };
+
+        let i = Intersections {
+            objects: vec![i1, i2],
+        };
+
+        let hit = i.get_hit();
+        assert_eq!(hit, None);
     }
 }
