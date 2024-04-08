@@ -6,7 +6,7 @@ use crate::sphere::Sphere;
 #[derive(Debug, Copy, Clone)]
 pub struct Intersection {
     pub time: f64,
-    pub object: Sphere,
+    pub object: Sphere, // TODO: Make this an object that implements Intersect
 }
 
 impl PartialEq for Intersection {
