@@ -1,22 +1,29 @@
 use crate::intersection::{Intersection, Intersections};
+use crate::matrix::Matrix;
 use crate::ray;
 use crate::tuple::Tuple;
 
-#[derive(Debug, PartialEq, Copy, Clone)]
+#[derive(Debug, PartialEq, Clone)]
 pub struct Sphere {
     radius: f64,
     origin: Tuple,
+    transform: Matrix,
 }
 
 impl Sphere {
     pub(crate) fn new(radius: f64, origin: Tuple) -> Self {
-        Sphere { radius, origin }
+        Sphere { radius, origin, transform: Matrix::identity(4) }
     }
+
+    pub(crate) fn set_transform(&mut self, transform: Matrix) {
+        self.transform = transform;
+    }
+
     pub fn unit() -> Self {
-        Sphere {
-            radius: 1.0,
-            origin: Tuple::origin(),
-        }
+        Sphere::new(
+            1.0,
+            Tuple::origin(),
+        )
     }
 }
 
@@ -42,11 +49,11 @@ impl ray::Intersect for Sphere {
                 objects: vec![
                     Intersection {
                         time: r1,
-                        object: *self,
+                        object: self.clone(),
                     },
                     Intersection {
                         time: r2,
-                        object: *self,
+                        object: self.clone(),
                     },
                 ],
             }

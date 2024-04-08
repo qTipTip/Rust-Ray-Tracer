@@ -3,7 +3,7 @@ use crate::utils;
 use std::any::Any;
 use std::ops::Index;
 
-#[derive(Debug, Copy, Clone)]
+#[derive(Debug, Clone)]
 pub struct Intersection {
     pub time: f64,
     pub object: Sphere, // TODO: Make this an object that implements Intersect
@@ -53,7 +53,7 @@ impl Intersections {
                 if i.time < 0.0 {
                     None
                 } else {
-                    Some(*i)
+                    Some(i.clone())
                 }
             }
         }
@@ -88,7 +88,7 @@ mod tests {
         };
 
         let i = Intersections {
-            objects: vec![i1, i2],
+            objects: vec![i1.clone(), i2.clone()],
         };
 
         assert_eq!(i.objects[0], i1);
@@ -111,7 +111,7 @@ mod tests {
             };
 
             let i = Intersections {
-                objects: vec![i1, i2],
+                objects: vec![i1.clone(), i2],
             };
 
             let hit = i.get_hit().unwrap();
@@ -131,7 +131,7 @@ mod tests {
             };
 
             let i = Intersections {
-                objects: vec![i1, i2],
+                objects: vec![i1, i2.clone()],
             };
 
             let hit = i.get_hit().unwrap();
@@ -151,7 +151,7 @@ mod tests {
             };
 
             let i = Intersections {
-                objects: vec![i1, i2],
+                objects: vec![i1, i2.clone()],
             };
 
             let hit = i.get_hit();
@@ -179,7 +179,7 @@ mod tests {
             };
 
             let i = Intersections {
-                objects: vec![i1, i2, i3, i4],
+                objects: vec![i1, i2, i3, i4.clone()],
             };
 
             let hit = i.get_hit().unwrap();
