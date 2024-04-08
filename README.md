@@ -6,7 +6,7 @@ My attempt at implementing a _ray tracer from scratch in Rust. This is in order 
 
 ### Plotting a projectile
 
-![](./examples/projectile.png)
+<img height="100" src="./examples/projectile.png" width="100"/>
 
 ### Drawing a clock
 
