@@ -12,6 +12,7 @@ mod tuple;
 mod utils;
 mod renders;
 mod normals;
+mod lights;
 
 use crate::clock::clock;
 use crate::projectile::projectile;
