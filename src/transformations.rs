@@ -62,9 +62,9 @@ pub fn shearing(xy: f64, xz: f64, yx: f64, yz: f64, zx: f64, zy: f64) -> Matrix 
 
 #[cfg(test)]
 mod tests {
-    use std::f64::consts::PI;
     use crate::transformations::{rotation_x, scaling, translation};
     use crate::tuple::Tuple;
+    use std::f64::consts::PI;
 
     mod translation {
         use crate::transformations::translation;
@@ -133,9 +133,9 @@ mod tests {
     }
 
     mod rotations {
-        use std::f64::consts::PI;
         use crate::transformations::{rotation_x, rotation_y, rotation_z};
         use crate::tuple::Tuple;
+        use std::f64::consts::PI;
 
         #[test]
         fn rotate_around_x_axis() {
@@ -143,11 +143,10 @@ mod tests {
             let r1 = rotation_x(PI / 4.0);
             let r2 = rotation_x(PI / 2.0);
 
-            assert_eq!(r1 * p, Tuple::point(
-                0.0,
-                f64::sqrt(2.0) / 2.0,
-                f64::sqrt(2.0) / 2.0,
-            ));
+            assert_eq!(
+                r1 * p,
+                Tuple::point(0.0, f64::sqrt(2.0) / 2.0, f64::sqrt(2.0) / 2.0,)
+            );
             assert_eq!(r2 * p, Tuple::point(0.0, 0.0, 1.0));
         }
 
@@ -156,11 +155,10 @@ mod tests {
             let p = Tuple::point(0.0, 1.0, 0.0);
             let r1 = rotation_x(PI / 4.0);
 
-            assert_eq!(r1.inverse() * p, Tuple::point(
-                0.0,
-                f64::sqrt(2.0) / 2.0,
-                -f64::sqrt(2.0) / 2.0,
-            ));
+            assert_eq!(
+                r1.inverse() * p,
+                Tuple::point(0.0, f64::sqrt(2.0) / 2.0, -f64::sqrt(2.0) / 2.0,)
+            );
         }
 
         #[test]
@@ -169,11 +167,10 @@ mod tests {
             let r1 = rotation_y(PI / 4.0);
             let r2 = rotation_y(PI / 2.0);
 
-            assert_eq!(r1 * p, Tuple::point(
-                f64::sqrt(2.0) / 2.0,
-                0.0,
-                f64::sqrt(2.0) / 2.0,
-            ));
+            assert_eq!(
+                r1 * p,
+                Tuple::point(f64::sqrt(2.0) / 2.0, 0.0, f64::sqrt(2.0) / 2.0,)
+            );
             assert_eq!(r2 * p, Tuple::point(1.0, 0.0, 0.0));
         }
 
@@ -183,11 +180,10 @@ mod tests {
             let r1 = rotation_z(PI / 4.0);
             let r2 = rotation_z(PI / 2.0);
 
-            assert_eq!(r1 * p, Tuple::point(
-                -f64::sqrt(2.0) / 2.0,
-                f64::sqrt(2.0) / 2.0,
-                0.0,
-            ));
+            assert_eq!(
+                r1 * p,
+                Tuple::point(-f64::sqrt(2.0) / 2.0, f64::sqrt(2.0) / 2.0, 0.0,)
+            );
             assert_eq!(r2 * p, Tuple::point(-1.0, 0.0, 0.0));
         }
     }
@@ -248,26 +244,27 @@ mod tests {
     #[test]
     fn apply_transformations_in_sequence() {
         let p = Tuple::point(1.0, 0.0, 1.0);
-        let A = rotation_x(PI / 2.0);
-        let B = scaling(5.0, 5.0, 5.0);
-        let C = translation(10.0, 5.0, 7.0);
+        let a = rotation_x(PI / 2.0);
+        let b = scaling(5.0, 5.0, 5.0);
+        let c = translation(10.0, 5.0, 7.0);
 
-        let p2 = A * p;
+        let p2 = a * p;
         assert_eq!(p2, Tuple::point(1.0, -1.0, 0.0));
 
-        let p3 = B * p2;
+        let p3 = b * p2;
         assert_eq!(p3, Tuple::point(5.0, -5.0, 0.0));
 
-        let p4 = C * p3;
+        let p4 = c * p3;
         assert_eq!(p4, Tuple::point(15.0, 0.0, 7.0));
     }
 
+    #[test]
     fn apply_transformations_chained() {
         let p = Tuple::point(1.0, 0.0, 1.0);
-        let A = rotation_x(PI / 2.0);
-        let B = scaling(5.0, 5.0, 5.0);
-        let C = translation(10.0, 5.0, 7.0);
+        let a = rotation_x(PI / 2.0);
+        let b = scaling(5.0, 5.0, 5.0);
+        let c = translation(10.0, 5.0, 7.0);
 
-        assert_eq!(C * B * A * p, Tuple::point(15.0, 0.0, 7.0));
+        assert_eq!(c * b * a * p, Tuple::point(15.0, 0.0, 7.0));
     }
 }

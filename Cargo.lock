@@ -3,6 +3,14 @@
 version = 3
 
 [[package]]
+name = "_ray-tracer"
+version = "0.1.0"
+dependencies = [
+ "image",
+ "textwrap",
+]
+
+[[package]]
 name = "adler"
 version = "1.0.2"
 source = "registry+https://github.com/rust-lang/crates.io-index"
@@ -690,14 +698,6 @@ dependencies = [
  "rav1e",
  "rayon",
  "rgb",
-]
-
-[[package]]
-name = "ray-tracer"
-version = "0.1.0"
-dependencies = [
- "image",
- "textwrap",
 ]
 
 [[package]]

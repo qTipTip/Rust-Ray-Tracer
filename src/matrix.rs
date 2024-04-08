@@ -1,9 +1,9 @@
-use std::ops::Mul;
-use std::vec;
 use crate::tuple::Tuple;
 use crate::utils;
+use std::ops::Mul;
+use std::vec;
 
-#[derive(Debug)]
+#[derive(Debug, Clone)]
 pub(crate) struct Matrix {
     values: Vec<f64>,
     rows: usize,
@@ -205,7 +205,12 @@ impl Mul<Tuple> for Matrix {
         let rhs_matrix = Matrix::new(vec![rhs.x, rhs.y, rhs.z, rhs.w as f64], 4, 1);
         let result_matrix = self * rhs_matrix;
 
-        Tuple::new(result_matrix.values[0], result_matrix.values[1], result_matrix.values[2], result_matrix.values[3] as u8)
+        Tuple::new(
+            result_matrix.values[0],
+            result_matrix.values[1],
+            result_matrix.values[2],
+            result_matrix.values[3] as u8,
+        )
     }
 }
 
@@ -216,10 +221,14 @@ impl Mul<&Tuple> for &Matrix {
         let rhs_matrix = Matrix::new(vec![rhs.x, rhs.y, rhs.z, rhs.w as f64], 4, 1);
         let result_matrix = self * &rhs_matrix;
 
-        Tuple::new(result_matrix.values[0], result_matrix.values[1], result_matrix.values[2], result_matrix.values[3] as u8)
+        Tuple::new(
+            result_matrix.values[0],
+            result_matrix.values[1],
+            result_matrix.values[2],
+            result_matrix.values[3] as u8,
+        )
     }
 }
-
 
 #[cfg(test)]
 mod tests {
@@ -251,26 +260,27 @@ mod tests {
 
     #[test]
     fn matrix_multiplication() {
-        let m1 = Matrix::new(vec![
-            1.0, 2.0, 3.0, 4.0,
-            5.0, 6.0, 7.0, 8.0,
-            9.0, 8.0, 7.0, 6.0,
-            5.0, 4.0, 3.0, 2.0,
-        ], 4, 4,
+        let m1 = Matrix::new(
+            vec![
+                1.0, 2.0, 3.0, 4.0, 5.0, 6.0, 7.0, 8.0, 9.0, 8.0, 7.0, 6.0, 5.0, 4.0, 3.0, 2.0,
+            ],
+            4,
+            4,
         );
-        let m2 = Matrix::new(vec![
-            -2.0, 1.0, 2.0, 3.0,
-            3.0, 2.0, 1.0, -1.0,
-            4.0, 3.0, 6.0, 5.0,
-            1.0, 2.0, 7.0, 8.0,
-        ], 4, 4,
+        let m2 = Matrix::new(
+            vec![
+                -2.0, 1.0, 2.0, 3.0, 3.0, 2.0, 1.0, -1.0, 4.0, 3.0, 6.0, 5.0, 1.0, 2.0, 7.0, 8.0,
+            ],
+            4,
+            4,
         );
-        let m3 = Matrix::new(vec![
-            20.0, 22.0, 50.0, 48.0,
-            44.0, 54.0, 114.0, 108.0,
-            40.0, 58.0, 110.0, 102.0,
-            16.0, 26.0, 46.0, 42.0,
-        ], 4, 4,
+        let m3 = Matrix::new(
+            vec![
+                20.0, 22.0, 50.0, 48.0, 44.0, 54.0, 114.0, 108.0, 40.0, 58.0, 110.0, 102.0, 16.0,
+                26.0, 46.0, 42.0,
+            ],
+            4,
+            4,
         );
 
         assert_eq!(m1 * m2, m3)
@@ -278,12 +288,13 @@ mod tests {
 
     #[test]
     fn matrix_tuple_multiplication() {
-        let m = Matrix::new(vec![
-            1.0, 2.0, 3.0, 4.0,
-            2.0, 4.0, 4.0, 2.0,
-            8.0, 6.0, 4.0, 1.0,
-            0.0, 0.0, 0.0, 1.0,
-        ], 4, 4);
+        let m = Matrix::new(
+            vec![
+                1.0, 2.0, 3.0, 4.0, 2.0, 4.0, 4.0, 2.0, 8.0, 6.0, 4.0, 1.0, 0.0, 0.0, 0.0, 1.0,
+            ],
+            4,
+            4,
+        );
 
         let b = Tuple::new(1.0, 2.0, 3.0, 1);
 
@@ -292,12 +303,13 @@ mod tests {
 
     #[test]
     fn identity_matrix_matrix_multiplication() {
-        let m = Matrix::new(vec![
-            1.0, 2.0, 3.0, 4.0,
-            2.0, 4.0, 4.0, 2.0,
-            8.0, 6.0, 4.0, 1.0,
-            0.0, 0.0, 0.0, 1.0,
-        ], 4, 4);
+        let m = Matrix::new(
+            vec![
+                1.0, 2.0, 3.0, 4.0, 2.0, 4.0, 4.0, 2.0, 8.0, 6.0, 4.0, 1.0, 0.0, 0.0, 0.0, 1.0,
+            ],
+            4,
+            4,
+        );
         let i = Matrix::identity(4);
 
         assert_eq!(&m * &i, m);
@@ -313,15 +325,8 @@ mod tests {
 
     #[test]
     fn test_transposition() {
-        let m = Matrix::new(vec![
-            1.0, 2.0,
-            3.0, 4.0,
-            5.0, 6.0,
-        ], 3, 2);
-        let n = Matrix::new(vec![
-            1.0, 3.0, 5.0,
-            2.0, 4.0, 6.0,
-        ], 2, 3);
+        let m = Matrix::new(vec![1.0, 2.0, 3.0, 4.0, 5.0, 6.0], 3, 2);
+        let n = Matrix::new(vec![1.0, 3.0, 5.0, 2.0, 4.0, 6.0], 2, 3);
 
         assert_eq!(m.transpose(), n);
     }
@@ -341,72 +346,47 @@ mod tests {
 
     #[test]
     fn test_remove_row() {
-        let m = Matrix::new(vec![
-            1.0, 2.0, 3.0,
-            4.0, 5.0, 6.0,
-        ], 2, 3);
+        let m = Matrix::new(vec![1.0, 2.0, 3.0, 4.0, 5.0, 6.0], 2, 3);
 
-        let n = Matrix::new(vec![
-            4.0, 5.0, 6.0,
-        ], 1, 3);
+        let n = Matrix::new(vec![4.0, 5.0, 6.0], 1, 3);
 
         assert_eq!(m.remove_row(0), n);
     }
 
     #[test]
     fn test_remove_column() {
-        let m = Matrix::new(vec![
-            1.0, 2.0, 3.0,
-            4.0, 5.0, 6.0,
-        ], 2, 3);
+        let m = Matrix::new(vec![1.0, 2.0, 3.0, 4.0, 5.0, 6.0], 2, 3);
 
-        let n = Matrix::new(vec![
-            2.0, 3.0,
-            5.0, 6.0,
-        ], 2, 2);
+        let n = Matrix::new(vec![2.0, 3.0, 5.0, 6.0], 2, 2);
 
         assert_eq!(m.remove_column(0), n);
     }
 
     #[test]
     fn test_2x2_submatrix() {
-        let m = Matrix::new(vec![
-            1.0, 5.0, 0.0,
-            -3.0, 2.0, 7.0,
-            0.0, 6.0, -3.0,
-        ], 3, 3);
-        let s = Matrix::new(vec![
-            -3.0, 2.0,
-            0.0, 6.0,
-        ], 2, 2);
+        let m = Matrix::new(vec![1.0, 5.0, 0.0, -3.0, 2.0, 7.0, 0.0, 6.0, -3.0], 3, 3);
+        let s = Matrix::new(vec![-3.0, 2.0, 0.0, 6.0], 2, 2);
 
         assert_eq!(m.submatrix(0, 2), s);
     }
 
     #[test]
     fn test_3x3_submatrix() {
-        let m = Matrix::new(vec![
-            -6.0, 1.0, 1.0, 6.0,
-            -8.0, 5.0, 8.0, 6.0,
-            -1.0, 0.0, 8.0, 2.0,
-            -7.0, 1.0, -1.0, 1.0,
-        ], 4, 4);
-        let s = Matrix::new(vec![
-            5.0, 8.0, 6.0,
-            0.0, 8.0, 2.0,
-            1.0, -1.0, 1.0,
-        ], 3, 3);
+        let m = Matrix::new(
+            vec![
+                -6.0, 1.0, 1.0, 6.0, -8.0, 5.0, 8.0, 6.0, -1.0, 0.0, 8.0, 2.0, -7.0, 1.0, -1.0, 1.0,
+            ],
+            4,
+            4,
+        );
+        let s = Matrix::new(vec![5.0, 8.0, 6.0, 0.0, 8.0, 2.0, 1.0, -1.0, 1.0], 3, 3);
 
         assert_eq!(m.submatrix(0, 0), s);
     }
 
     #[test]
     fn test_3x3_minor() {
-        let m = Matrix::new(vec![
-            3.0, 5.0, 0.0,
-            2.0, -1.0, -7.0,
-            6.0, -1.0, 5.0,
-        ], 3, 3);
+        let m = Matrix::new(vec![3.0, 5.0, 0.0, 2.0, -1.0, -7.0, 6.0, -1.0, 5.0], 3, 3);
 
         assert_eq!(m.submatrix(1, 0).det(), 25.0);
         assert_eq!(m.minor(1, 0), 25.0);
@@ -414,11 +394,7 @@ mod tests {
 
     #[test]
     fn test_2x2_cofactor() {
-        let m = Matrix::new(vec![
-            3.0, 5.0, 0.0,
-            2.0, -1.0, -7.0,
-            6.0, -1.0, 5.0,
-        ], 3, 3);
+        let m = Matrix::new(vec![3.0, 5.0, 0.0, 2.0, -1.0, -7.0, 6.0, -1.0, 5.0], 3, 3);
 
         assert_eq!(m.minor(0, 0), -12.0);
         assert_eq!(m.cofactor(0, 0), -12.0);
@@ -428,11 +404,7 @@ mod tests {
 
     #[test]
     fn test_3x3_determinant() {
-        let m = Matrix::new(vec![
-            1.0, 2.0, 6.0,
-            -5.0, 8.0, -4.0,
-            2.0, 6.0, 4.0,
-        ], 3, 3);
+        let m = Matrix::new(vec![1.0, 2.0, 6.0, -5.0, 8.0, -4.0, 2.0, 6.0, 4.0], 3, 3);
 
         assert_eq!(m.cofactor(0, 0), 56.0);
         assert_eq!(m.cofactor(0, 1), 12.0);
@@ -442,12 +414,14 @@ mod tests {
 
     #[test]
     fn test_4x4_determinant() {
-        let m = Matrix::new(vec![
-            -2.0, -8.0, 3.0, 5.0,
-            -3.0, 1.0, 7.0, 3.0,
-            1.0, 2.0, -9.0, 6.0,
-            -6.0, 7.0, 7.0, -9.0,
-        ], 4, 4);
+        let m = Matrix::new(
+            vec![
+                -2.0, -8.0, 3.0, 5.0, -3.0, 1.0, 7.0, 3.0, 1.0, 2.0, -9.0, 6.0, -6.0, 7.0, 7.0,
+                -9.0,
+            ],
+            4,
+            4,
+        );
 
         assert_eq!(m.cofactor(0, 0), 690.0);
         assert_eq!(m.cofactor(0, 1), 447.0);
@@ -458,12 +432,13 @@ mod tests {
 
     #[test]
     fn test_inverse() {
-        let m = Matrix::new(vec![
-            -5.0, 2.0, 6.0, -8.0,
-            3.0, 1.0, -5.0, 3.0,
-            9.0, 0.0, 1.3, 2.3,
-            1.9, 2.0, 1.1, 0.0,
-        ], 4, 4);
+        let m = Matrix::new(
+            vec![
+                -5.0, 2.0, 6.0, -8.0, 3.0, 1.0, -5.0, 3.0, 9.0, 0.0, 1.3, 2.3, 1.9, 2.0, 1.1, 0.0,
+            ],
+            4,
+            4,
+        );
 
         assert_eq!(&m * &m.inverse(), Matrix::identity(4));
     }
@@ -477,14 +452,16 @@ mod tests {
     #[test]
     fn test_inverse_equation() {
         // C = AB => A = CB^-1
-        let m = Matrix::new(vec![
-            1.0, 3.0, -1.0, 2.0,
-            3.2, 3.1, -1.1, 99.0,
-            12.0, 0.0, 1.0, 2.0,
-            12.0, 13.0, 1.0, 2.0,
-        ], 4, 4);
+        let m = Matrix::new(
+            vec![
+                1.0, 3.0, -1.0, 2.0, 3.2, 3.1, -1.1, 99.0, 12.0, 0.0, 1.0, 2.0, 12.0, 13.0, 1.0,
+                2.0,
+            ],
+            4,
+            4,
+        );
         let n = &m.transpose();
-        let c = &m * &n;
+        let c = &m * n;
 
         assert_eq!(&c * &n.inverse(), m);
     }

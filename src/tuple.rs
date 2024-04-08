@@ -1,5 +1,5 @@
-use std::ops::{Add, Div, Mul, Neg, Sub};
 use crate::utils;
+use std::ops::{Add, Div, Mul, Neg, Sub};
 
 #[derive(Debug, Copy, Clone)]
 pub struct Tuple {
@@ -8,7 +8,6 @@ pub struct Tuple {
     pub z: f64,
     pub w: u8,
 }
-
 
 impl Tuple {
     pub fn new(x: f64, y: f64, z: f64, w: u8) -> Self {
@@ -32,6 +31,10 @@ impl Tuple {
     }
 
     pub fn origin() -> Self {
+        Self::point(0.0, 0.0, 0.0)
+    }
+
+    pub fn zero_vector() -> Self {
         Self::vector(0.0, 0.0, 0.0)
     }
 
@@ -48,7 +51,11 @@ impl Tuple {
     }
 
     pub fn cross(&self, rhs: Self) -> Self {
-        Self::vector(self.y * rhs.z - self.z * rhs.y, self.z * rhs.x - self.x * rhs.z, self.x * rhs.y - self.y * rhs.x)
+        Self::vector(
+            self.y * rhs.z - self.z * rhs.y,
+            self.z * rhs.x - self.x * rhs.z,
+            self.x * rhs.y - self.y * rhs.x,
+        )
     }
 }
 
@@ -57,9 +64,9 @@ impl PartialEq for Tuple {
         if self.w != other.w {
             false
         } else {
-            (self.x - other.x).abs() < utils::F64_ERROR_MARGIN &&
-                (self.y - other.y).abs() < utils::F64_ERROR_MARGIN &&
-                (self.z - other.z).abs() < utils::F64_ERROR_MARGIN
+            (self.x - other.x).abs() < utils::F64_ERROR_MARGIN
+                && (self.y - other.y).abs() < utils::F64_ERROR_MARGIN
+                && (self.z - other.z).abs() < utils::F64_ERROR_MARGIN
         }
     }
 }
@@ -94,7 +101,7 @@ impl Neg for Tuple {
     type Output = Self;
 
     fn neg(self) -> Self::Output {
-        Self::origin() - self
+        Self::zero_vector() - self
     }
 }
 
@@ -168,7 +175,7 @@ mod tests {
     fn test_equality() {
         let a = Tuple::new(4.3, -4.2, 3.1, 1);
         let b = Tuple::new(4.3, -4.2, 3.1, 0);
-        let c = Tuple::new(4.3, -4.20000000000001, 3.1, 0);
+        let c = Tuple::new(4.3, -4.20000001, 3.1, 0);
 
         assert_ne!(a, b);
         assert!(c != a && c != b && c == c);

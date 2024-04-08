@@ -32,7 +32,6 @@ pub fn projectile() {
     let mut c = Canvas::new(900, 550);
     let color = Color::new(1.0, 1.0, 1.0);
 
-
     while p.position.y > 0.0 {
         p = tick(&e, &p);
 

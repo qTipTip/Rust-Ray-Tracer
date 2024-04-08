@@ -1,17 +1,23 @@
-mod tuple;
-mod color;
 mod canvas;
-mod image;
-mod matrix;
-mod utils;
-mod transformations;
 mod clock;
+mod color;
+mod image;
+mod intersection;
+mod matrix;
 mod projectile;
+mod ray;
+mod sphere;
+mod transformations;
+mod tuple;
+mod utils;
+mod renders;
 
 use crate::clock::clock;
 use crate::projectile::projectile;
+use crate::renders::render_sphere;
 
 fn main() {
-    clock();
-    projectile();
+    // clock();
+    // projectile();
+    render_sphere()
 }
