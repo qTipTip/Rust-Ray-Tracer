@@ -1,5 +1,6 @@
 use crate::intersection::{Intersection, Intersections};
 use crate::matrix::Matrix;
+use crate::normals::Normal;
 use crate::ray;
 use crate::tuple::Tuple;
 
@@ -24,6 +25,12 @@ impl Sphere {
             1.0,
             Tuple::origin(),
         )
+    }
+}
+
+impl Normal for Sphere {
+    fn normal_at(&self, point: Tuple) -> Tuple {
+        (point - self.origin).norm()
     }
 }
 
@@ -84,5 +91,35 @@ mod tests {
         s.set_transform(&t);
 
         assert_eq!(s.transform, t);
+    }
+
+    #[test]
+    fn test_sphere_normal_on_x() {
+        let s = Sphere::unit();
+        let n = s.normal_at(Tuple::point(1.0, 0.0, 0.0));
+        assert_eq!(n, Tuple::vector(1.0, 0.0, 0.0));
+    }
+
+    #[test]
+    fn test_sphere_normal_on_y() {
+        let s = Sphere::unit();
+        let n = s.normal_at(Tuple::point(0.0, 1.0, 0.0));
+        assert_eq!(n, Tuple::vector(0.0, 1.0, 0.0));
+    }
+
+    #[test]
+    fn test_sphere_normal_on_z() {
+        let s = Sphere::unit();
+        let n = s.normal_at(Tuple::point(0.0, 0.0, 1.0));
+        assert_eq!(n, Tuple::vector(0.0, 0.0, 1.0));
+    }
+
+    #[test]
+    fn test_sphere_normal_on_nonaxial_point() {
+        let x = 3.0f64.sqrt() / 3.0;
+        let s = Sphere::unit();
+        let n = s.normal_at(Tuple::point(x, x, x));
+        assert_eq!(n, Tuple::vector(x, x, x));
+        assert_eq!(n, n.norm());
     }
 }

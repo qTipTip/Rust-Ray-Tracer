@@ -11,6 +11,7 @@ mod transformations;
 mod tuple;
 mod utils;
 mod renders;
+mod normals;
 
 use crate::clock::clock;
 use crate::projectile::projectile;
