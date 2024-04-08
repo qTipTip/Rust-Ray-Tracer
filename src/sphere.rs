@@ -15,8 +15,8 @@ impl Sphere {
         Sphere { radius, origin, transform: Matrix::identity(4) }
     }
 
-    pub(crate) fn set_transform(&mut self, transform: Matrix) {
-        self.transform = transform;
+    pub(crate) fn set_transform(&mut self, transform: &Matrix) {
+        self.transform = transform.clone();
     }
 
     pub fn unit() -> Self {
@@ -58,5 +58,27 @@ impl ray::Intersect for Sphere {
                 ],
             }
         }
+    }
+}
+
+#[cfg(test)]
+mod tests {
+    use crate::transformations::scaling;
+    use super::*;
+
+    #[test]
+    fn test_sphere_default_transform() {
+        let s = Sphere::unit();
+        assert_eq!(s.transform, Matrix::identity(4));
+    }
+
+    #[test]
+    fn test_sphere_set_transform() {
+        let mut s = Sphere::unit();
+        let t = scaling(1.0, 2.0, 0.0);
+
+        s.set_transform(&t);
+
+        assert_eq!(s.transform, t);
     }
 }
