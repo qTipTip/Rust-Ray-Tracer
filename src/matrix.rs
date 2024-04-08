@@ -3,7 +3,7 @@ use crate::utils;
 use std::ops::Mul;
 use std::vec;
 
-#[derive(Debug)]
+#[derive(Debug, Clone)]
 pub(crate) struct Matrix {
     values: Vec<f64>,
     rows: usize,

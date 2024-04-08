@@ -1,4 +1,5 @@
 use crate::intersection::Intersections;
+use crate::matrix::Matrix;
 use crate::tuple::Tuple;
 
 pub struct Ray {
@@ -25,12 +26,20 @@ impl Ray {
     fn intersect(&self, object: &impl Intersect) -> Intersections {
         object.ray_intersections(self)
     }
+
+    fn transform(&self, transformation: Matrix) -> Self {
+        Self::new(
+            transformation.clone() * self.origin,
+            transformation.clone() * self.direction,
+        )
+    }
 }
 
 #[cfg(test)]
 mod tests {
     use crate::ray::Ray;
     use crate::sphere::Sphere;
+    use crate::transformations::{scaling, translation};
     use crate::tuple::Tuple;
 
     #[test]
@@ -117,5 +126,27 @@ mod tests {
         assert_eq!(xs.len(), 2);
         assert_eq!(xs[0].object, s);
         assert_eq!(xs[1].object, s);
+    }
+
+    #[test]
+    fn translate_ray() {
+        let ray = Ray::new(Tuple::point(1.0, 2.0, 3.0), Tuple::vector(0.0, 1.0, 0.0));
+        let m = translation(3.0, 4.0, 5.0);
+
+        let r2: Ray = ray.transform(m);
+
+        assert_eq!(r2.origin, Tuple::point(4.0, 6.0, 8.0));
+        assert_eq!(r2.direction, Tuple::vector(0.0, 1.0, 0.0));
+    }
+
+    #[test]
+    fn scale_ray() {
+        let ray = Ray::new(Tuple::point(1.0, 2.0, 3.0), Tuple::vector(0.0, 1.0, 0.0));
+        let m = scaling(2.0, 3.0, 4.0);
+
+        let r2: Ray = ray.transform(m);
+
+        assert_eq!(r2.origin, Tuple::point(2.0, 6.0, 12.0));
+        assert_eq!(r2.direction, Tuple::vector(0.0, 3.0, 0.0));
     }
 }
