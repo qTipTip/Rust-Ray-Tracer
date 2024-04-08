@@ -2,6 +2,7 @@ use crate::intersection::{Intersection, Intersections};
 use crate::matrix::Matrix;
 use crate::normals::Normal;
 use crate::ray;
+use crate::ray::Intersect;
 use crate::tuple::Tuple;
 
 #[derive(Debug, PartialEq, Clone)]
@@ -30,7 +31,16 @@ impl Sphere {
 
 impl Normal for Sphere {
     fn normal_at(&self, point: Tuple) -> Tuple {
-        (point - self.origin).norm()
+        let transform = self.transform.clone();
+        let transform_inverse = transform.inverse();
+        let object_point = transform_inverse.clone() * point;
+        let object_normal = object_point - self.origin;
+        let mut world_normal = transform_inverse.transpose() * object_normal;
+
+        // When transforming the normal, we mess up the "vector"-status of the normal.
+        // Resetting that here.
+        world_normal.w = 0;
+        world_normal.norm()
     }
 }
 
@@ -74,7 +84,8 @@ impl ray::Intersect for Sphere {
 
 #[cfg(test)]
 mod tests {
-    use crate::transformations::scaling;
+    use std::f64::consts::PI;
+    use crate::transformations::{rotation_z, scaling, translation};
     use super::*;
 
     #[test]
@@ -120,6 +131,31 @@ mod tests {
         let s = Sphere::unit();
         let n = s.normal_at(Tuple::point(x, x, x));
         assert_eq!(n, Tuple::vector(x, x, x));
+        assert_eq!(n, n.norm());
+    }
+
+    #[test]
+    fn test_sphere_normal_after_translate() {
+        let mut s = Sphere::unit();
+        s.set_transform(&translation(0.0, 1.0, 0.0));
+
+        let n = s.normal_at(Tuple::point(0.0, 1.70711, -0.70711));
+        assert_eq!(n, Tuple::vector(0.0, 0.7071067811865475,  -0.7071067811865476));
+        assert_eq!(n, n.norm());
+    }
+
+    #[test]
+    fn test_sphere_normal_after_transform() {
+        let mut s = Sphere::unit();
+        s.set_transform(&
+            (
+                scaling(1.0, 0.5, 1.0) * rotation_z(PI / 5.0)
+            )
+        );
+
+        let a = f64::sqrt(2.0) / 2.0;
+        let n = s.normal_at(Tuple::point(0.0, a, -a));
+        assert_eq!(n, Tuple::vector(0.0, 0.9701425001453319, -0.24253562503633294));
         assert_eq!(n, n.norm());
     }
 }
