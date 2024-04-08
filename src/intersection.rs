@@ -1,7 +1,7 @@
+use crate::sphere::Sphere;
 use crate::utils;
 use std::any::Any;
 use std::ops::Index;
-use crate::sphere::Sphere;
 
 #[derive(Debug, Copy, Clone)]
 pub struct Intersection {
@@ -23,7 +23,6 @@ impl PartialEq for Intersection {
     }
 }
 
-
 #[derive(Debug)]
 pub struct Intersections {
     pub objects: Vec<Intersection>,
@@ -43,23 +42,23 @@ impl Intersections {
     }
 
     pub fn get_hit(&self) -> Option<Intersection> {
-        let min_intersect = self.objects.iter().
-            filter(|a| a.time >= 0.0).
-            min_by(|
-                a,
-                b
-            | a.time.partial_cmp(&b.time).unwrap());
+        let min_intersect = self
+            .objects
+            .iter()
+            .filter(|a| a.time >= 0.0)
+            .min_by(|a, b| a.time.partial_cmp(&b.time).unwrap());
         match min_intersect {
-            None => { None }
+            None => None,
             Some(i) => {
                 if i.time < 0.0 {
                     None
-                } else { Some(*i) }
+                } else {
+                    Some(*i)
+                }
             }
         }
     }
 }
-
 
 #[cfg(test)]
 mod tests {
@@ -96,62 +95,95 @@ mod tests {
         assert_eq!(i.objects[1], i2);
     }
 
-    #[test]
-    fn intersections_yields_hit() {
-        let i1 = Intersection {
-            time: 1.0,
-            object: Sphere::unit(),
-        };
-        let i2 = Intersection {
-            time: 2.0,
-            object: Sphere::unit(),
-        };
+    mod hits {
+        use crate::intersection::{Intersection, Intersections};
+        use crate::sphere::Sphere;
 
-        let i = Intersections {
-            objects: vec![i1, i2],
-        };
+        #[test]
+        fn intersections_yields_hit() {
+            let i1 = Intersection {
+                time: 1.0,
+                object: Sphere::unit(),
+            };
+            let i2 = Intersection {
+                time: 2.0,
+                object: Sphere::unit(),
+            };
 
-        let hit = i.get_hit().unwrap();
+            let i = Intersections {
+                objects: vec![i1, i2],
+            };
 
-        assert_eq!(i1, hit);
-    }
+            let hit = i.get_hit().unwrap();
 
-    #[test]
-    fn intersections_yields_hit_some_negative() {
-        let i1 = Intersection {
-            time: -1.0,
-            object: Sphere::unit(),
-        };
-        let i2 = Intersection {
-            time: 2.0,
-            object: Sphere::unit(),
-        };
+            assert_eq!(i1, hit);
+        }
 
-        let i = Intersections {
-            objects: vec![i1, i2],
-        };
+        #[test]
+        fn intersections_yields_hit_some_negative() {
+            let i1 = Intersection {
+                time: -1.0,
+                object: Sphere::unit(),
+            };
+            let i2 = Intersection {
+                time: 2.0,
+                object: Sphere::unit(),
+            };
 
-        let hit = i.get_hit().unwrap();
+            let i = Intersections {
+                objects: vec![i1, i2],
+            };
 
-        assert_eq!(i2, hit);
-    }
+            let hit = i.get_hit().unwrap();
 
-    #[test]
-    fn intersections_yields_hit_all_negative() {
-        let i1 = Intersection {
-            time: -1.0,
-            object: Sphere::unit(),
-        };
-        let i2 = Intersection {
-            time: -2.0,
-            object: Sphere::unit(),
-        };
+            assert_eq!(i2, hit);
+        }
 
-        let i = Intersections {
-            objects: vec![i1, i2],
-        };
+        #[test]
+        fn intersections_yields_hit_all_negative() {
+            let i1 = Intersection {
+                time: -1.0,
+                object: Sphere::unit(),
+            };
+            let i2 = Intersection {
+                time: -2.0,
+                object: Sphere::unit(),
+            };
 
-        let hit = i.get_hit();
-        assert_eq!(hit, None);
+            let i = Intersections {
+                objects: vec![i1, i2],
+            };
+
+            let hit = i.get_hit();
+            assert_eq!(hit, None);
+        }
+
+        #[test]
+        fn intersection_hits_lowest_nonnegative() {
+            let i1 = Intersection {
+                time: 5.0,
+                object: Sphere::unit(),
+            };
+            let i2 = Intersection {
+                time: 7.0,
+                object: Sphere::unit(),
+            };
+
+            let i3 = Intersection {
+                time: -3.0,
+                object: Sphere::unit(),
+            };
+            let i4 = Intersection {
+                time: 2.0,
+                object: Sphere::unit(),
+            };
+
+            let i = Intersections {
+                objects: vec![i1, i2, i3, i4],
+            };
+
+            let hit = i.get_hit().unwrap();
+            assert_eq!(hit, i4);
+        }
     }
 }

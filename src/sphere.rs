@@ -1,4 +1,4 @@
-use crate::intersection::{Intersections, Intersection};
+use crate::intersection::{Intersection, Intersections};
 use crate::ray;
 use crate::tuple::Tuple;
 
@@ -40,9 +40,15 @@ impl ray::Intersect for Sphere {
 
             Intersections {
                 objects: vec![
-                    Intersection { time: r1, object: *self },
-                    Intersection { time: r2, object: *self },
-                ]
+                    Intersection {
+                        time: r1,
+                        object: *self,
+                    },
+                    Intersection {
+                        time: r2,
+                        object: *self,
+                    },
+                ],
             }
         }
     }

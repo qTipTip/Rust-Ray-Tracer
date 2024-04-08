@@ -1,7 +1,6 @@
 use crate::intersection::Intersections;
 use crate::tuple::Tuple;
 
-
 pub struct Ray {
     pub origin: Tuple,
     pub direction: Tuple,
@@ -111,16 +110,12 @@ mod tests {
 
     #[test]
     fn test_intersection_has_object_reference() {
-        let r = Ray::new(
-            Tuple::point(0.0, 0.0, -0.5),
-            Tuple::vector(0.0, 0.0, 1.0)
-        );
+        let r = Ray::new(Tuple::point(0.0, 0.0, -0.5), Tuple::vector(0.0, 0.0, 1.0));
         let s = Sphere::unit();
         let xs = r.intersect(&s);
 
         assert_eq!(xs.len(), 2);
         assert_eq!(xs[0].object, s);
         assert_eq!(xs[1].object, s);
-
     }
 }
