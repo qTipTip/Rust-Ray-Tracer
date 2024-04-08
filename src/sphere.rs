@@ -59,6 +59,10 @@ impl ray::Intersect for Sphere {
             }
         }
     }
+
+    fn get_transform(&self) -> Option<Matrix> {
+        Option::from(self.transform.clone())
+    }
 }
 
 #[cfg(test)]

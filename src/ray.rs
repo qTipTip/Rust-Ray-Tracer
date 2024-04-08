@@ -9,6 +9,7 @@ pub struct Ray {
 
 pub trait Intersect: std::fmt::Debug {
     fn ray_intersections(&self, ray: &Ray) -> Intersections;
+    fn get_transform(&self) -> Option<Matrix>;
 }
 
 impl Ray {
@@ -24,7 +25,15 @@ impl Ray {
     }
 
     fn intersect(&self, object: &impl Intersect) -> Intersections {
-        object.ray_intersections(self)
+        let transform = object.get_transform();
+
+        match transform {
+            None => { object.ray_intersections(self) }
+            Some(t) => {
+                let ray_transformed = self.transform(t.inverse());
+                object.ray_intersections(&ray_transformed)
+            }
+        }
     }
 
     fn transform(&self, transformation: Matrix) -> Self {
@@ -148,5 +157,21 @@ mod tests {
 
         assert_eq!(r2.origin, Tuple::point(2.0, 6.0, 12.0));
         assert_eq!(r2.direction, Tuple::vector(0.0, 3.0, 0.0));
+    }
+
+    #[test]
+    fn test_intersection_with_scaled_sphere() {
+        let r = Ray::new(Tuple::point(0.0, 0.0, -5.0), Tuple::vector(0.0, 0.0, 1.0));
+        let mut s = Sphere::unit();
+        s.set_transform(&scaling(2.0, 2.0, 2.0));
+
+        let xs = r.intersect(&s);
+
+        assert_eq!(xs.len(), 2);
+        assert_eq!(xs[0].object, s);
+        assert_eq!(xs[1].object, s);
+
+        assert_eq!(xs[0].time, 3.0);
+        assert_eq!(xs[1].time, 7.0);
     }
 }
