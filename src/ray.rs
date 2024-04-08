@@ -24,7 +24,7 @@ impl Ray {
         self.origin + self.direction * t
     }
 
-    fn intersect(&self, object: &impl Intersect) -> Intersections {
+    pub(crate) fn intersect(&self, object: &impl Intersect) -> Intersections {
         let transform = object.get_transform();
 
         match transform {
