@@ -13,6 +13,7 @@ mod utils;
 mod renders;
 mod normals;
 mod lights;
+mod material;
 
 use crate::clock::clock;
 use crate::projectile::projectile;

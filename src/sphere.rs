@@ -1,4 +1,5 @@
 use crate::intersection::{Intersection, Intersections};
+use crate::material::Material;
 use crate::matrix::Matrix;
 use crate::normals::Normal;
 use crate::ray;
@@ -10,15 +11,20 @@ pub struct Sphere {
     radius: f64,
     origin: Tuple,
     transform: Matrix,
+    material: Material,
 }
 
 impl Sphere {
     pub(crate) fn new(radius: f64, origin: Tuple) -> Self {
-        Sphere { radius, origin, transform: Matrix::identity(4) }
+        Sphere { radius, origin, transform: Matrix::identity(4), material: Material::default() }
     }
 
     pub(crate) fn set_transform(&mut self, transform: &Matrix) {
         self.transform = transform.clone();
+    }
+
+    pub fn set_material(&mut self, material: Material) {
+        self.material = material
     }
 
     pub fn unit() -> Self {
@@ -85,6 +91,7 @@ impl ray::Intersect for Sphere {
 #[cfg(test)]
 mod tests {
     use std::f64::consts::PI;
+    use crate::color::Color;
     use crate::transformations::{rotation_z, scaling, translation};
     use super::*;
 
@@ -140,7 +147,7 @@ mod tests {
         s.set_transform(&translation(0.0, 1.0, 0.0));
 
         let n = s.normal_at(Tuple::point(0.0, 1.70711, -0.70711));
-        assert_eq!(n, Tuple::vector(0.0, 0.7071067811865475,  -0.7071067811865476));
+        assert_eq!(n, Tuple::vector(0.0, 0.7071067811865475, -0.7071067811865476));
         assert_eq!(n, n.norm());
     }
 
@@ -157,5 +164,19 @@ mod tests {
         let n = s.normal_at(Tuple::point(0.0, a, -a));
         assert_eq!(n, Tuple::vector(0.0, 0.9701425001453319, -0.24253562503633294));
         assert_eq!(n, n.norm());
+    }
+
+    #[test]
+    fn sphere_has_default_material() {
+        let s = Sphere::unit();
+        assert_eq!(s.material, Material::default());
+    }
+
+    #[test]
+    fn sphere_can_be_assigned_material() {
+        let mut s = Sphere::unit();
+        let m = Material::new(Color::new(1.0, 0.0, 1.0), 1.0, 2.0, 3.0, 4.0);
+        s.set_material(m);
+        assert_eq!(s.material, m);
     }
 }
