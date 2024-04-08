@@ -174,4 +174,15 @@ mod tests {
         assert_eq!(xs[0].time, 3.0);
         assert_eq!(xs[1].time, 7.0);
     }
+
+    #[test]
+    fn test_intersection_with_translated_sphere() {
+        let r = Ray::new(Tuple::point(0.0, 0.0, -5.0), Tuple::vector(0.0, 0.0, 1.0));
+        let mut s = Sphere::unit();
+        s.set_transform(&translation(5.0, 0.0, 0.0));
+
+        let xs = r.intersect(&s);
+
+        assert_eq!(xs.len(), 0);
+    }
 }
