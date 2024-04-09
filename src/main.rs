@@ -17,10 +17,11 @@ mod material;
 
 use crate::clock::clock;
 use crate::projectile::projectile;
-use crate::renders::render_sphere;
+use crate::renders::{render_sphere, render_sphere_with_shading};
 
 fn main() {
     // clock();
     // projectile();
-    render_sphere()
+    // render_sphere();
+    render_sphere_with_shading()
 }
