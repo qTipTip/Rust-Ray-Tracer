@@ -15,3 +15,7 @@ My attempt at implementing a _ray tracer from scratch in Rust. This is in order 
 ### Rendering a sphere (no shadow, flat)
 
 ![](./examples/sphere.png)
+
+### Rendering a sphere (phong shading)
+
+![](examples/sphere_shaded_highres.png)
