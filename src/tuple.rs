@@ -57,6 +57,14 @@ impl Tuple {
             self.x * rhs.y - self.y * rhs.x,
         )
     }
+
+    pub fn reflect(&self, normal: Self) -> Self {
+        if normal.is_point() {
+            panic!("Cannot reflect around a point")
+        }
+
+        *self - normal * 2.0 * self.dot(normal)
+    }
 }
 
 impl PartialEq for Tuple {
@@ -279,5 +287,24 @@ mod tests {
         let c = Tuple::vector(-1.0, 2.0, -1.0);
         assert_eq!(a.cross(b), c);
         assert_eq!(b.cross(a), -c);
+    }
+
+    #[test]
+    fn reflect_vector_at_45_degrees() {
+        let v = Tuple::vector(1.0, -1.0, 0.0);
+        let n = Tuple::vector(0.0, 1.0, 0.0);
+        let r = v.reflect(n);
+
+        assert_eq!(r, Tuple::vector(1.0, 1.0, 0.0));
+    }
+
+    #[test]
+    fn reflect_vector_off_slanted_surface() {
+        let a = f64::sqrt(2.0) / 2.0;
+        let v = Tuple::vector(0.0, -1.0, 0.0);
+        let n = Tuple::vector(a, a, 0.0);
+        let r = v.reflect(n);
+
+        assert_eq!(r, Tuple::vector(1.0, 0.0, 0.0));
     }
 }

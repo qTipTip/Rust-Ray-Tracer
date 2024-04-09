@@ -20,6 +20,10 @@ impl Color {
             ((self.green * 255.) as u8).clamp(0, 255),
         ]
     }
+
+    pub fn black() -> Self {
+        Self::new(0.0, 0.0, 0.0)
+    }
 }
 
 impl PartialEq for Color {

@@ -1,4 +1,5 @@
 use crate::intersection::Intersections;
+use crate::material::Material;
 use crate::matrix::Matrix;
 use crate::tuple::Tuple;
 
@@ -10,6 +11,7 @@ pub struct Ray {
 pub trait Intersect: std::fmt::Debug {
     fn ray_intersections(&self, ray: &Ray) -> Intersections;
     fn get_transform(&self) -> Option<Matrix>;
+    fn get_material(&self) -> Option<Material>;
 }
 
 impl Ray {
@@ -20,7 +22,7 @@ impl Ray {
         Self { origin, direction }
     }
 
-    fn position(&self, t: f64) -> Tuple {
+    pub fn position(&self, t: f64) -> Tuple {
         self.origin + self.direction * t
     }
 
