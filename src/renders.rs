@@ -58,10 +58,9 @@ pub fn render_sphere_with_shading() {
     let pixel_size = wall_size / canvas_size as f64;
     let half = wall_size / 2.0;
 
-    let color = Color::new(1.0, 0.0, 0.0);
     let mut shape = Sphere::unit();
     let mut material = Material::default();
-    material.color = Color::new(1.0, 0.2, 1.0);
+    material.color = Color::new(1.0, 0.0, 0.0);
     shape.set_material(material);
 
     let light_position = Tuple::point(-10.0, 10.0, -10.0);
@@ -97,5 +96,5 @@ pub fn render_sphere_with_shading() {
         }
     }
 
-    write_to_file(&c, "sphere_shaded.ppm");
+    write_to_file(&c, "../examples/ppm/sphere_shaded.ppm");
 }
