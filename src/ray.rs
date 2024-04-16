@@ -30,18 +30,18 @@ impl Ray {
         let transform = object.get_transform();
 
         match transform {
-            None => { object.ray_intersections(self) }
+            None => object.ray_intersections(self),
             Some(t) => {
-                let ray_transformed = self.transform(t.inverse());
+                let ray_transformed = self.transform(&t.inverse());
                 object.ray_intersections(&ray_transformed)
             }
         }
     }
 
-    fn transform(&self, transformation: Matrix) -> Self {
+    fn transform(&self, transformation: &Matrix) -> Self {
         Self::new(
-            transformation.clone() * self.origin,
-            transformation.clone() * self.direction,
+            transformation * self.origin,
+            transformation * self.direction,
         )
     }
 }
@@ -144,7 +144,7 @@ mod tests {
         let ray = Ray::new(Tuple::point(1.0, 2.0, 3.0), Tuple::vector(0.0, 1.0, 0.0));
         let m = translation(3.0, 4.0, 5.0);
 
-        let r2: Ray = ray.transform(m);
+        let r2: Ray = ray.transform(&m);
 
         assert_eq!(r2.origin, Tuple::point(4.0, 6.0, 8.0));
         assert_eq!(r2.direction, Tuple::vector(0.0, 1.0, 0.0));
@@ -155,7 +155,7 @@ mod tests {
         let ray = Ray::new(Tuple::point(1.0, 2.0, 3.0), Tuple::vector(0.0, 1.0, 0.0));
         let m = scaling(2.0, 3.0, 4.0);
 
-        let r2: Ray = ray.transform(m);
+        let r2: Ray = ray.transform(&m);
 
         assert_eq!(r2.origin, Tuple::point(2.0, 6.0, 12.0));
         assert_eq!(r2.direction, Tuple::vector(0.0, 3.0, 0.0));

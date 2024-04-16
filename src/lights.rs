@@ -6,18 +6,26 @@ use crate::tuple::Tuple;
 pub struct PointLight {
     position: Tuple,
     intensity: Color,
-
 }
 
 impl PointLight {
     pub fn new(position: Tuple, intensity: Color) -> Self {
-        Self { position, intensity }
+        Self {
+            position,
+            intensity,
+        }
     }
 }
 
-pub fn lighting(material: Material, light: PointLight, point: Tuple, eye_vector: Tuple, normal_vector: Tuple) -> Color {
+pub fn lighting(
+    material: &Material,
+    light: &PointLight,
+    point: &Tuple,
+    eye_vector: &Tuple,
+    normal_vector: &Tuple,
+) -> Color {
     let effective_color = material.color * light.intensity;
-    let light_vector = (light.position - point).norm();
+    let light_vector = (light.position - *point).norm();
     let ambient = effective_color * material.ambient;
 
     let light_dot_normal = light_vector.dot(normal_vector);

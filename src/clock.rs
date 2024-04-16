@@ -20,7 +20,7 @@ pub fn clock() {
             1.0 / (i + 1) as f64,
         );
 
-        c.write_pixel(z.x as usize, c.height - z.y as usize, color);
+        c.write_pixel(z.x as usize, c.height - z.y as usize, &color);
         p = &rotation_one_hour * &p;
     }
 
