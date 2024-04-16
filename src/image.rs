@@ -45,7 +45,7 @@ mod tests {
         assert_eq!(
             header,
             r#"
-P3
+P3x
 10 20
 255
 "#
