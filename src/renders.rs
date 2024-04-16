@@ -84,7 +84,7 @@ pub fn render_sphere_with_shading() {
                 None => {}
                 Some(hit) => {
                     let intersection_point = ray.position(hit.time);
-                    let normal_vector = hit.object.normal_at(intersection_point);
+                    let normal_vector = hit.object.normal_at(&intersection_point);
                     let eye_vector = -ray.direction;
 
                     let color = lighting(

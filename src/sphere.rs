@@ -38,10 +38,10 @@ impl Sphere {
 }
 
 impl Normal for Sphere {
-    fn normal_at(&self, point: Tuple) -> Tuple {
+    fn normal_at(&self, point: &Tuple) -> Tuple {
         let transform = self.transform.clone();
         let transform_inverse = transform.inverse();
-        let object_point = transform_inverse.clone() * point;
+        let object_point = transform_inverse.clone() * *point;
         let object_normal = object_point - self.origin;
         let mut world_normal = transform_inverse.transpose() * object_normal;
 
@@ -120,21 +120,21 @@ mod tests {
     #[test]
     fn test_sphere_normal_on_x() {
         let s = Sphere::unit();
-        let n = s.normal_at(Tuple::point(1.0, 0.0, 0.0));
+        let n = s.normal_at(&Tuple::point(1.0, 0.0, 0.0));
         assert_eq!(n, Tuple::vector(1.0, 0.0, 0.0));
     }
 
     #[test]
     fn test_sphere_normal_on_y() {
         let s = Sphere::unit();
-        let n = s.normal_at(Tuple::point(0.0, 1.0, 0.0));
+        let n = s.normal_at(&Tuple::point(0.0, 1.0, 0.0));
         assert_eq!(n, Tuple::vector(0.0, 1.0, 0.0));
     }
 
     #[test]
     fn test_sphere_normal_on_z() {
         let s = Sphere::unit();
-        let n = s.normal_at(Tuple::point(0.0, 0.0, 1.0));
+        let n = s.normal_at(&Tuple::point(0.0, 0.0, 1.0));
         assert_eq!(n, Tuple::vector(0.0, 0.0, 1.0));
     }
 
@@ -142,7 +142,7 @@ mod tests {
     fn test_sphere_normal_on_nonaxial_point() {
         let x = 3.0f64.sqrt() / 3.0;
         let s = Sphere::unit();
-        let n = s.normal_at(Tuple::point(x, x, x));
+        let n = s.normal_at(&Tuple::point(x, x, x));
         assert_eq!(n, Tuple::vector(x, x, x));
         assert_eq!(n, n.norm());
     }
@@ -152,7 +152,7 @@ mod tests {
         let mut s = Sphere::unit();
         s.set_transform(&translation(0.0, 1.0, 0.0));
 
-        let n = s.normal_at(Tuple::point(0.0, 1.70711, -0.70711));
+        let n = s.normal_at(&Tuple::point(0.0, 1.70711, -0.70711));
         assert_eq!(
             n,
             Tuple::vector(0.0, 0.7071067811865475, -0.7071067811865476)
@@ -166,7 +166,7 @@ mod tests {
         s.set_transform(&(scaling(1.0, 0.5, 1.0) * rotation_z(PI / 5.0)));
 
         let a = f64::sqrt(2.0) / 2.0;
-        let n = s.normal_at(Tuple::point(0.0, a, -a));
+        let n = s.normal_at(&Tuple::point(0.0, a, -a));
         assert_eq!(
             n,
             Tuple::vector(0.0, 0.9701425001453319, -0.24253562503633294)
