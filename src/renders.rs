@@ -61,7 +61,7 @@ pub fn render_sphere_with_shading() {
     let mut shape = Sphere::unit();
     let mut material = Material::default();
     material.color = Color::new(1.0, 0.0, 0.0);
-    shape.set_material(material);
+    shape.set_material(&material);
 
     let light_position = Tuple::point(-10.0, 10.0, -10.0);
     let light_color = Color::new(1.0, 1.0, 1.0);

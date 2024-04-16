@@ -28,8 +28,8 @@ impl Sphere {
         self.transform = transform.clone();
     }
 
-    pub fn set_material(&mut self, material: Material) {
-        self.material = material
+    pub fn set_material(&mut self, material: &Material) {
+        self.material = *material
     }
 
     pub fn unit() -> Self {
@@ -52,7 +52,7 @@ impl Normal for Sphere {
     }
 }
 
-impl ray::Intersect for Sphere {
+impl Intersect for Sphere {
     fn ray_intersections(&self, ray: &ray::Ray) -> Intersections {
         let sphere_to_ray = ray.origin - self.origin;
 
@@ -184,7 +184,7 @@ mod tests {
     fn sphere_can_be_assigned_material() {
         let mut s = Sphere::unit();
         let m = Material::new(Color::new(1.0, 0.0, 1.0), 1.0, 2.0, 3.0, 4.0);
-        s.set_material(m);
+        s.set_material(&m);
         assert_eq!(s.material, m);
     }
 }
