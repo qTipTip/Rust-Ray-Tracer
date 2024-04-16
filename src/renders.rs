@@ -67,7 +67,6 @@ pub fn render_sphere_with_shading() {
     let light_color = Color::new(1.0, 1.0, 1.0);
     let light = PointLight::new(light_position, light_color);
 
-
     for y in 0..c.height {
         let world_y = half - pixel_size * y as f64;
         for x in 0..c.width {
@@ -88,7 +87,13 @@ pub fn render_sphere_with_shading() {
                     let normal_vector = hit.object.normal_at(intersection_point);
                     let eye_vector = -ray.direction;
 
-                    let color = lighting(hit.object.get_material().unwrap(), light, intersection_point, eye_vector, normal_vector);
+                    let color = lighting(
+                        &hit.object.get_material().unwrap(),
+                        &light,
+                        &intersection_point,
+                        &eye_vector,
+                        &normal_vector,
+                    );
 
                     c.write_pixel(x, y, &color);
                 }

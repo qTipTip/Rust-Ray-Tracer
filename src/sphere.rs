@@ -16,7 +16,12 @@ pub struct Sphere {
 
 impl Sphere {
     pub(crate) fn new(radius: f64, origin: Tuple) -> Self {
-        Sphere { radius, origin, transform: Matrix::identity(4), material: Material::default() }
+        Sphere {
+            radius,
+            origin,
+            transform: Matrix::identity(4),
+            material: Material::default(),
+        }
     }
 
     pub(crate) fn set_transform(&mut self, transform: &Matrix) {
@@ -28,10 +33,7 @@ impl Sphere {
     }
 
     pub fn unit() -> Self {
-        Sphere::new(
-            1.0,
-            Tuple::origin(),
-        )
+        Sphere::new(1.0, Tuple::origin())
     }
 }
 
@@ -54,9 +56,9 @@ impl ray::Intersect for Sphere {
     fn ray_intersections(&self, ray: &ray::Ray) -> Intersections {
         let sphere_to_ray = ray.origin - self.origin;
 
-        let a = ray.direction.dot(ray.direction);
-        let b = 2.0 * ray.direction.dot(sphere_to_ray);
-        let c = sphere_to_ray.dot(sphere_to_ray) - 1.0;
+        let a = ray.direction.dot(&ray.direction);
+        let b = 2.0 * ray.direction.dot(&sphere_to_ray);
+        let c = sphere_to_ray.dot(&sphere_to_ray) - 1.0;
 
         let discriminant = b * b - 4.0 * a * c;
 
@@ -94,10 +96,10 @@ impl ray::Intersect for Sphere {
 
 #[cfg(test)]
 mod tests {
-    use std::f64::consts::PI;
+    use super::*;
     use crate::color::Color;
     use crate::transformations::{rotation_z, scaling, translation};
-    use super::*;
+    use std::f64::consts::PI;
 
     #[test]
     fn test_sphere_default_transform() {
@@ -151,22 +153,24 @@ mod tests {
         s.set_transform(&translation(0.0, 1.0, 0.0));
 
         let n = s.normal_at(Tuple::point(0.0, 1.70711, -0.70711));
-        assert_eq!(n, Tuple::vector(0.0, 0.7071067811865475, -0.7071067811865476));
+        assert_eq!(
+            n,
+            Tuple::vector(0.0, 0.7071067811865475, -0.7071067811865476)
+        );
         assert_eq!(n, n.norm());
     }
 
     #[test]
     fn test_sphere_normal_after_transform() {
         let mut s = Sphere::unit();
-        s.set_transform(&
-            (
-                scaling(1.0, 0.5, 1.0) * rotation_z(PI / 5.0)
-            )
-        );
+        s.set_transform(&(scaling(1.0, 0.5, 1.0) * rotation_z(PI / 5.0)));
 
         let a = f64::sqrt(2.0) / 2.0;
         let n = s.normal_at(Tuple::point(0.0, a, -a));
-        assert_eq!(n, Tuple::vector(0.0, 0.9701425001453319, -0.24253562503633294));
+        assert_eq!(
+            n,
+            Tuple::vector(0.0, 0.9701425001453319, -0.24253562503633294)
+        );
         assert_eq!(n, n.norm());
     }
 

@@ -30,12 +30,11 @@ impl Material {
     }
 }
 
-
 #[cfg(test)]
 mod tests {
+    use super::*;
     use crate::lights::{lighting, PointLight};
     use crate::tuple::Tuple;
-    use super::*;
 
     #[test]
     fn lighting_eye_between_source_and_surface() {
@@ -43,12 +42,9 @@ mod tests {
         let pos = Tuple::origin();
         let eye = Tuple::vector(0.0, 0.0, -1.0);
         let normal = Tuple::vector(0.0, 0.0, -1.0);
-        let l = PointLight::new(
-            Tuple::point(0.0, 0.0, -10.0),
-            Color::new(1.0, 1.0, 1.0),
-        );
+        let l = PointLight::new(Tuple::point(0.0, 0.0, -10.0), Color::new(1.0, 1.0, 1.0));
 
-        let result = lighting(m, l, pos, eye, normal);
+        let result = lighting(&m, &l, &pos, &eye, &normal);
 
         assert_eq!(result, Color::new(1.9, 1.9, 1.9))
     }
@@ -59,12 +55,9 @@ mod tests {
         let pos = Tuple::origin();
         let eye = Tuple::vector(0.0, f64::sqrt(2.0) / 2.0, f64::sqrt(2.0) / 2.0);
         let normal = Tuple::vector(0.0, 0.0, -1.0);
-        let l = PointLight::new(
-            Tuple::point(0.0, 0.0, -10.0),
-            Color::new(1.0, 1.0, 1.0),
-        );
+        let l = PointLight::new(Tuple::point(0.0, 0.0, -10.0), Color::new(1.0, 1.0, 1.0));
 
-        let result = lighting(m, l, pos, eye, normal);
+        let result = lighting(&m, &l, &pos, &eye, &normal);
 
         assert_eq!(result, Color::new(1.0, 1.0, 1.0))
     }
@@ -75,14 +68,14 @@ mod tests {
         let pos = Tuple::origin();
         let eye = Tuple::vector(0.0, 0.0, -1.0);
         let normal = Tuple::vector(0.0, 0.0, -1.0);
-        let l = PointLight::new(
-            Tuple::point(0.0, 10.0, -10.0),
-            Color::new(1.0, 1.0, 1.0),
-        );
+        let l = PointLight::new(Tuple::point(0.0, 10.0, -10.0), Color::new(1.0, 1.0, 1.0));
 
-        let result = lighting(m, l, pos, eye, normal);
+        let result = lighting(&m, &l, &pos, &eye, &normal);
 
-        assert_eq!(result, Color::new(0.7363961030678927, 0.7363961030678927, 0.7363961030678927))
+        assert_eq!(
+            result,
+            Color::new(0.7363961030678927, 0.7363961030678927, 0.7363961030678927)
+        )
     }
 
     #[test]
@@ -91,14 +84,14 @@ mod tests {
         let pos = Tuple::origin();
         let eye = Tuple::vector(0.0, -f64::sqrt(2.0) / 2.0, -f64::sqrt(2.0) / 2.0);
         let normal = Tuple::vector(0.0, 0.0, -1.0);
-        let l = PointLight::new(
-            Tuple::point(0.0, 10.0, -10.0),
-            Color::new(1.0, 1.0, 1.0),
-        );
+        let l = PointLight::new(Tuple::point(0.0, 10.0, -10.0), Color::new(1.0, 1.0, 1.0));
 
-        let result = lighting(m, l, pos, eye, normal);
+        let result = lighting(&m, &l, &pos, &eye, &normal);
 
-        assert_eq!(result, Color::new(1.6363961030678928, 1.6363961030678928, 1.6363961030678928))
+        assert_eq!(
+            result,
+            Color::new(1.6363961030678928, 1.6363961030678928, 1.6363961030678928)
+        )
     }
 
     #[test]
@@ -107,14 +100,10 @@ mod tests {
         let pos = Tuple::origin();
         let eye = Tuple::vector(0.0, 0.0, -1.0);
         let normal = Tuple::vector(0.0, 0.0, -1.0);
-        let l = PointLight::new(
-            Tuple::point(0.0, 0.0, 10.0),
-            Color::new(1.0, 1.0, 1.0),
-        );
+        let l = PointLight::new(Tuple::point(0.0, 0.0, 10.0), Color::new(1.0, 1.0, 1.0));
 
-        let result = lighting(m, l, pos, eye, normal);
+        let result = lighting(&m, &l, &pos, &eye, &normal);
 
         assert_eq!(result, Color::new(0.1, 0.1, 0.1))
     }
 }
-

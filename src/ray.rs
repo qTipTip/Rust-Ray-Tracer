@@ -30,7 +30,7 @@ impl Ray {
         let transform = object.get_transform();
 
         match transform {
-            None => { object.ray_intersections(self) }
+            None => object.ray_intersections(self),
             Some(t) => {
                 let ray_transformed = self.transform(t.inverse());
                 object.ray_intersections(&ray_transformed)

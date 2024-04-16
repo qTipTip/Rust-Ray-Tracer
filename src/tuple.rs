@@ -46,11 +46,11 @@ impl Tuple {
         *self / self.abs()
     }
 
-    pub fn dot(&self, rhs: Self) -> f64 {
+    pub fn dot(&self, rhs: &Tuple) -> f64 {
         self.x * rhs.x + self.y * rhs.y + self.z * rhs.z + (self.w * rhs.w) as f64
     }
 
-    pub fn cross(&self, rhs: Self) -> Self {
+    pub fn cross(&self, rhs: &Tuple) -> Self {
         Self::vector(
             self.y * rhs.z - self.z * rhs.y,
             self.z * rhs.x - self.x * rhs.z,
@@ -58,12 +58,12 @@ impl Tuple {
         )
     }
 
-    pub fn reflect(&self, normal: Self) -> Self {
+    pub fn reflect(&self, normal: &Tuple) -> Self {
         if normal.is_point() {
             panic!("Cannot reflect around a point")
         }
 
-        *self - normal * 2.0 * self.dot(normal)
+        *self - *normal * 2.0 * self.dot(normal)
     }
 }
 
@@ -277,7 +277,7 @@ mod tests {
         let a = Tuple::vector(1.0, 2.0, 3.0);
         let b = Tuple::vector(2.0, 3.0, 4.0);
 
-        assert_eq!(a.dot(b), 20.0);
+        assert_eq!(a.dot(&b), 20.0);
     }
 
     #[test]
@@ -285,15 +285,15 @@ mod tests {
         let a = Tuple::vector(1.0, 2.0, 3.0);
         let b = Tuple::vector(2.0, 3.0, 4.0);
         let c = Tuple::vector(-1.0, 2.0, -1.0);
-        assert_eq!(a.cross(b), c);
-        assert_eq!(b.cross(a), -c);
+        assert_eq!(a.cross(&b), c);
+        assert_eq!(b.cross(&a), -c);
     }
 
     #[test]
     fn reflect_vector_at_45_degrees() {
         let v = Tuple::vector(1.0, -1.0, 0.0);
         let n = Tuple::vector(0.0, 1.0, 0.0);
-        let r = v.reflect(n);
+        let r = v.reflect(&n);
 
         assert_eq!(r, Tuple::vector(1.0, 1.0, 0.0));
     }
@@ -303,7 +303,7 @@ mod tests {
         let a = f64::sqrt(2.0) / 2.0;
         let v = Tuple::vector(0.0, -1.0, 0.0);
         let n = Tuple::vector(a, a, 0.0);
-        let r = v.reflect(n);
+        let r = v.reflect(&n);
 
         assert_eq!(r, Tuple::vector(1.0, 0.0, 0.0));
     }
