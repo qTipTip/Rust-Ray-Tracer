@@ -38,7 +38,7 @@ pub fn render_sphere() {
             match ix.get_hit() {
                 None => {}
                 Some(_) => {
-                    c.write_pixel(x, y, color);
+                    c.write_pixel(x, y, &color);
                 }
             }
         }
@@ -90,7 +90,7 @@ pub fn render_sphere_with_shading() {
 
                     let color = lighting(hit.object.get_material().unwrap(), light, intersection_point, eye_vector, normal_vector);
 
-                    c.write_pixel(x, y, color);
+                    c.write_pixel(x, y, &color);
                 }
             }
         }

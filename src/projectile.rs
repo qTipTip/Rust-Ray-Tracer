@@ -38,7 +38,7 @@ pub fn projectile() {
         let pixel_x = p.position.x.round().clamp(0.0, c.width as f64) as usize;
         let pixel_y = c.height - p.position.y.round().clamp(0.0, c.height as f64) as usize;
 
-        c.write_pixel(pixel_x, pixel_y, color);
+        c.write_pixel(pixel_x, pixel_y, &color);
     }
 
     write_to_file(&c, "./examples/projectile.ppm");

@@ -15,12 +15,12 @@ impl Canvas {
         }
     }
 
-    pub fn write_pixel(&mut self, x: usize, y: usize, c: Color) {
+    pub fn write_pixel(&mut self, x: usize, y: usize, c: &Color) {
         if x >= self.width || y >= self.height {
             return;
         }
 
-        self.pixels[self.width * y + x] = c
+        self.pixels[self.width * y + x] = *c
     }
 
     pub fn get_pixel(&self, x: usize, y: usize) -> Color {
@@ -51,7 +51,7 @@ mod tests {
         let mut c = Canvas::new(3, 5);
         let o = Color::new(1.0, 1.0, 1.0);
 
-        c.write_pixel(1, 0, o);
+        c.write_pixel(1, 0, &o);
         println!("{:?}", c.pixels);
         assert_eq!(c.get_pixel(1, 0), o);
     }
