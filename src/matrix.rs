@@ -230,6 +230,14 @@ impl Mul<&Tuple> for &Matrix {
     }
 }
 
+impl Mul<Tuple> for &Matrix {
+    type Output = Tuple;
+
+    fn mul(self, rhs: Tuple) -> Self::Output {
+        self * &rhs
+    }
+}
+
 #[cfg(test)]
 mod tests {
     use crate::matrix::Matrix;
